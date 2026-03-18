@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Delete {{ type }}{% endblock %}
+{% block page_title %}Delete {{ type }}{% endblock %}
+
+{% block content %}
+<div style="max-width:520px;margin:0 auto;">
+  <div class="card" style="border-top:3px solid var(--rose2);">
+    <div class="card-head" style="background:var(--rose-dim);">
+      <span class="card-title" style="color:var(--rose2);">
+        <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
+      </span>
+    </div>
+    <div class="card-body" style="text-align:center;padding:36px;">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--rose-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;color:var(--rose2);">
+        <i class="fas fa-trash"></i>
+      </div>
+      <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;">
+        Delete this {{ type }}?
+      </h3>
+      <p style="font-size:14px;color:var(--text2);margin-bottom:6px;">
+        You are about to permanently delete:
+      </p>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 20px;margin-bottom:20px;font-size:15px;font-weight:700;color:var(--text);">
+        "{{ object }}"
+      </div>
+      <div style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:10px;padding:12px 16px;margin-bottom:28px;text-align:left;">
+        <div style="font-size:12.5px;font-weight:700;color:var(--orange);margin-bottom:4px;">
+          <i class="fas fa-exclamation-circle me-1"></i> This action cannot be undone!
+        </div>
+        <div style="font-size:12px;color:var(--text3);">
+          {% if type == 'Product' %}
+          This product will be removed from the website and all related data will be deleted.
+          {% elif type == 'Category' %}
+          This category and all products inside it will be permanently deleted.
+          {% else %}
+          This record will be permanently removed from the database.
+          {% endif %}
+        </div>
+      </div>
+      <form method="POST" style="display:flex;gap:12px;justify-content:center;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" style="padding:12px 28px;font-size:14px;background:var(--rose2);color:white;border:none;">
+          <i class="fas fa-trash"></i> Yes, Delete
+        </button>
+        <a href="javascript:history.back()" class="btn btn-ghost" style="padding:12px 24px;font-size:14px;">
+          <i class="fas fa-times"></i> Cancel
+        </a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

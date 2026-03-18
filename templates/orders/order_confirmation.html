@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order Confirmed – Isha Return Gifts{% endblock %}
+
+{% block content %}
+<section class="confirmation-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="confirmation-card text-center">
+
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+
+                    <h2 class="confirmation-title">
+                        {% if order.is_cod %}
+                            Order Placed! 🎉
+                        {% else %}
+                            Payment Successful! 🎉
+                        {% endif %}
+                    </h2>
+                    <p class="confirmation-subtitle">
+                        Thank you, <strong>{{ order.customer_name }}</strong>!
+                        {% if order.is_cod %}
+                            Your order has been placed. Please keep cash ready for delivery.
+                        {% else %}
+                            Your payment is confirmed and order is being processed.
+                        {% endif %}
+                    </p>
+
+                    <!-- Order Details -->
+                    <div class="order-details-box">
+                        <div class="order-detail-row">
+                            <span>Order ID</span>
+                            <strong style="color:var(--gold);">#{{ order.get_short_order_id }}</strong>
+                        </div>
+                        <div class="order-detail-row">
+                            <span>Payment Method</span>
+                            <strong>
+                                {% if order.is_cod %}
+                                    💵 Cash on Delivery
+                                {% else %}
+                                    💳 Online Payment
+                                {% endif %}
+                            </strong>
+                        </div>
+                        {% if order.payment_id %}
+                        <div class="order-detail-row">
+                            <span>Payment ID</span>
+                            <strong style="font-size:13px;">{{ order.payment_id }}</strong>
+                        </div>
+                        {% endif %}
+                        <div class="order-detail-row">
+                            <span>Amount</span>
+                            <strong style="color:var(--maroon);font-size:1.1rem;">₹{{ order.total_price }}</strong>
+                        </div>
+                        <div class="order-detail-row">
+                            <span>Payment Status</span>
+                            <strong>
+                                {% if order.is_cod %}
+                                    <span style="color:var(--gold);">⏳ Pay on Delivery</span>
+                                {% else %}
+                                    <span style="color:#2e7d32;">✅ Paid</span>
+                                {% endif %}
+                            </strong>
+                        </div>
+                        <div class="order-detail-row">
+                            <span>Order Status</span>
+                            <strong style="color:#1565c0;">{{ order.order_status|title }}</strong>
+                        </div>
+                    </div>
+
+                    <!-- COD Special Notice -->
+                    {% if order.is_cod %}
+                    <div style="background:#fff8e1;border-radius:10px;padding:18px 24px;margin:20px 0;border:1px solid #ffe082;text-align:left;">
+                        <h6 style="color:#f57f17;font-weight:700;margin-bottom:8px;">📦 Cash on Delivery Instructions</h6>
+                        <ul style="margin:0;padding-left:18px;font-size:13.5px;color:#8a6020;line-height:2;">
+                            <li>Keep exact cash ready: <strong>₹{{ order.total_price }}</strong></li>
+                            <li>Our delivery partner will collect payment at your door</li>
+                            <li>Expected delivery: <strong>3–5 business days</strong></li>
+                            <li>You'll receive an SMS with tracking details</li>
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- Items Ordered -->
+                    <div class="order-items-summary mt-4">
+                        <h5>Items Ordered</h5>
+                        {% for item in order.items.all %}
+                        <div class="confirmation-item">
+                            <span class="ci-name">{{ item.product_name }}</span>
+                            <span class="ci-qty">× {{ item.quantity }}</span>
+                            <span class="ci-price">₹{{ item.get_subtotal }}</span>
+                        </div>
+                        {% endfor %}
+                        <div class="confirmation-item" style="border-top:2px solid var(--cream-dark);margin-top:8px;padding-top:10px;">
+                            <span class="ci-name" style="font-weight:700;">Total</span>
+                            <span class="ci-qty"></span>
+                            <span class="ci-price" style="font-size:1.1rem;">₹{{ order.total_price }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address -->
+                    <div class="delivery-info mt-4">
+                        <h5>Delivery Address</h5>
+                        <p>{{ order.address }}, {{ order.city }}, {{ order.state }} – {{ order.pincode }}</p>
+                        <p><i class="fas fa-phone-alt me-1"></i> {{ order.customer_phone }}</p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="confirmation-actions mt-5">
+                        <a href="{% url 'product_list' %}" class="btn-primary-gold">Continue Shopping</a>
+                        <a href="{% url 'home' %}" class="btn-outline-gold ms-3">Go to Home</a>
+                    </div>
+
+                    <!-- Notification Note -->
+                    <div class="confirmation-note mt-4">
+                        {% if order.customer_email %}
+                        <i class="fas fa-envelope me-1"></i>
+                        Order confirmation sent to <strong>{{ order.customer_email }}</strong>
+                        {% else %}
+                        <i class="fas fa-info-circle me-1"></i>
+                        Order confirmed! Our team will contact you at <strong>{{ order.customer_phone }}</strong>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

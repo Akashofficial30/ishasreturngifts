@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}FAQ – Isha's Return Gifts{% endblock %}
+{% block content %}
+<div style="background:linear-gradient(135deg,#1c0909,#2e1212);padding:60px 0;text-align:center;">
+  <div class="container" style="position:relative;z-index:2;">
+    <h1 style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#fff;margin-bottom:10px;">Frequently Asked <em style="color:#f0c96a;font-style:italic;">Questions</em></h1>
+    <p style="color:rgba(255,255,255,0.6);font-size:15px;">Find quick answers to common queries</p>
+  </div>
+</div>
+<section style="padding:72px 0;background:#fdf9f5;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        {% for q, a in faqs %}
+        <div style="background:#fff;border:1.5px solid #eeddd0;border-radius:12px;margin-bottom:10px;overflow:hidden;" class="faq-i" onclick="this.classList.toggle('open')">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-weight:600;font-size:14.5px;color:#22100a;">
+            <span>{{ q }}</span>
+            <div style="width:28px;height:28px;border-radius:50%;background:#fdf0ee;display:flex;align-items:center;justify-content:center;color:#c0392b;font-size:12px;flex-shrink:0;transition:all .3s;" class="fq-icon"><i class="fas fa-plus"></i></div>
+          </div>
+          <div style="padding:0 22px;max-height:0;overflow:hidden;font-size:14px;color:#6b3a2a;line-height:1.75;transition:all .35s;" class="fa-ans">{{ a }}</div>
+        </div>
+        {% endfor %}
+        <div style="text-align:center;margin-top:40px;">
+          <p style="color:#a07060;margin-bottom:16px;">Still have questions?</p>
+          <a href="{% url 'contact' %}" class="btn-primary-gold">Contact Us <i class="fas fa-arrow-right ms-2"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('.faq-i').forEach(function(el){
+  el.addEventListener('click',function(){
+    var ans=el.querySelector('.fa-ans');
+    var icon=el.querySelector('.fq-icon');
+    if(el.classList.contains('open')){ans.style.maxHeight='200px';ans.style.paddingBottom='18px';icon.style.background='#c0392b';icon.style.color='#fff';icon.style.transform='rotate(45deg)';}
+    else{ans.style.maxHeight='0';ans.style.paddingBottom='0';icon.style.background='#fdf0ee';icon.style.color='#c0392b';icon.style.transform='rotate(0)';}
+  });
+});
+</script>
+{% endblock %}

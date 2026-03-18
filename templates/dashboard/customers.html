@@ -1,0 +1,50 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Customers{% endblock %}
+{% block nav_customers %}active{% endblock %}
+{% block page_title %}Customers{% endblock %}
+
+{% block content %}
+<div class="s-header">
+  <div class="s-title"><h2>Customer Accounts</h2><p>Registered users on your store</p></div>
+  <div class="s-actions">
+    <a href="{% url 'export_customers_excel' %}" class="btn btn-excel"><i class="fas fa-file-excel"></i> Export Excel</a>
+  </div>
+</div>
+<div class="card">
+  <div class="filter-bar">
+    <form method="GET" style="display:flex;gap:10px;width:100%;">
+      <input type="text" name="search" class="f-control filter-search" placeholder="Search by username or email..." value="{{ search }}">
+      <button type="submit" class="btn btn-gold btn-sm"><i class="fas fa-search"></i> Search</button>
+      <a href="{% url 'dashboard_customers' %}" class="btn btn-ghost btn-sm"><i class="fas fa-times"></i></a>
+    </form>
+  </div>
+  <div style="overflow-x:auto;">
+    <table class="d-table">
+      <thead><tr><th>Customer</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Last Order</th><th>Joined</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for cd in customer_data %}
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:white;flex-shrink:0;">{{ cd.user.username|first|upper }}</div>
+              <div>
+                <div style="font-weight:600;">{{ cd.user.get_full_name|default:cd.user.username }}</div>
+                <div style="font-size:11px;color:var(--text3);">@{{ cd.user.username }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text2);font-size:12px;">{{ cd.user.email|default:"—" }}</td>
+          <td><span style="background:var(--bg3);padding:3px 10px;border-radius:12px;font-weight:700;font-size:12px;">{{ cd.order_count }}</span></td>
+          <td style="font-weight:700;color:var(--gold);">{% if cd.total_spent %}₹{{ cd.total_spent|floatformat:0 }}{% else %}—{% endif %}</td>
+          <td style="font-size:12px;color:var(--text3);">{% if cd.last_order %}{{ cd.last_order.created_at|date:"d M Y" }}{% else %}—{% endif %}</td>
+          <td style="font-size:12px;color:var(--text3);">{{ cd.user.date_joined|date:"d M Y" }}</td>
+          <td>{% if cd.user.is_active %}<span class="badge b-active">Active</span>{% else %}<span class="badge b-inactive">Inactive</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7"><div class="empty"><i class="fas fa-users"></i><p>No customers yet.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

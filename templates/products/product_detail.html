@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} – Isha Return Gifts{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Products</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product_list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a></li>
+                <li class="breadcrumb-item active">{{ product.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<section class="product-detail-section">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <!-- Product Images -->
+            <div class="col-lg-6">
+                <div class="product-gallery">
+                    <div class="main-image">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" id="mainImage">
+                        {% else %}
+                        <div class="product-img-placeholder large"><i class="fas fa-gift"></i></div>
+                        {% endif %}
+                        {% if product.discount_percentage > 0 %}
+                        <span class="badge-discount badge-lg">-{{ product.discount_percentage }}% OFF</span>
+                        {% endif %}
+                    </div>
+                    {% if product.images.all %}
+                    <div class="thumbnail-strip mt-3">
+                        <img src="{{ product.image.url }}" class="thumb active" onclick="changeImage(this, '{{ product.image.url }}')">
+                        {% for img in product.images.all %}
+                        <img src="{{ img.image.url }}" class="thumb" onclick="changeImage(this, '{{ img.image.url }}')">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-6">
+                <div class="product-detail-info">
+                    <span class="detail-category">{{ product.category.name }}</span>
+                    <h1 class="detail-name">{{ product.name }}</h1>
+
+                    <div class="detail-price">
+                        {% if product.offer_price %}
+                        <span class="price-current-lg">₹{{ product.offer_price }}</span>
+                        <span class="price-original-lg">₹{{ product.price }}</span>
+                        <span class="price-savings">You save ₹{{ product.price|floatformat:0|stringformat:"s" }}</span>
+                        {% else %}
+                        <span class="price-current-lg">₹{{ product.price }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-stock {% if product.is_in_stock %}in-stock{% else %}out-stock{% endif %}">
+                        <i class="fas {% if product.is_in_stock %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                        {% if product.is_in_stock %}In Stock ({{ product.stock_quantity }} available){% else %}Out of Stock{% endif %}
+                    </div>
+
+                    <div class="detail-description">
+                        <h5>Description</h5>
+                        <p>{{ product.description }}</p>
+                    </div>
+
+                    {% if product.is_in_stock %}
+                    <form action="{% url 'add_to_cart' product.id %}" method="POST" class="add-to-cart-form">
+                        {% csrf_token %}
+                        <div class="quantity-selector mb-4">
+                            <label>Quantity</label>
+                            <div class="qty-control">
+                                <button type="button" class="qty-btn minus" onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
+                                <input type="number" name="quantity" id="qtyInput" value="1" min="1" max="{{ product.stock_quantity }}" class="qty-input">
+                                <button type="button" class="qty-btn plus" onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="detail-actions">
+                            <button type="submit" class="btn-primary-gold btn-lg-full">
+                                <i class="fas fa-shopping-bag me-2"></i> Add to Cart
+                            </button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="detail-actions">
+                        <button class="btn-disabled btn-lg-full" disabled>Out of Stock</button>
+                    </div>
+                    {% endif %}
+
+                    <div class="detail-features mt-4">
+                        <div class="feature-item"><i class="fas fa-shield-alt"></i> Secure Payment</div>
+                        <div class="feature-item"><i class="fas fa-truck"></i> Pan India Delivery</div>
+                        <div class="feature-item"><i class="fas fa-gift"></i> Gift Packaging</div>
+                        <div class="feature-item"><i class="fas fa-undo"></i> Easy Returns</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+{% if related_products %}
+<section class="products-section related-section">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">You May Also <em>Like</em></h2>
+            <div class="section-divider"><span>✦</span></div>
+        </div>
+        <div class="row g-4">
+            {% for rp in related_products %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="product-card">
+                    <div class="product-img-wrap">
+                        {% if rp.image %}
+                        <img src="{{ rp.image.url }}" alt="{{ rp.name }}" class="product-img">
+                        {% else %}
+                        <div class="product-img-placeholder"><i class="fas fa-gift"></i></div>
+                        {% endif %}
+                        <div class="product-overlay">
+                            <a href="{% url 'product_detail' rp.slug %}" class="overlay-btn">View Details</a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="{% url 'product_detail' rp.slug %}">{{ rp.name }}</a></h3>
+                        <div class="product-price">
+                            <span class="price-current">₹{{ rp.effective_price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function changeQty(delta) {
+    const input = document.getElementById('qtyInput');
+    const max = parseInt(input.getAttribute('max'));
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    if (val > max) val = max;
+    input.value = val;
+}
+function changeImage(thumb, url) {
+    document.getElementById('mainImage').src = url;
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+}
+</script>
+{% endblock %}

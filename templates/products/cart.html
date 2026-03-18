@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Cart – Isha Return Gifts{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <h1>Your <em>Cart</em></h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Cart</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<section class="cart-section">
+    <div class="container">
+        {% if cart_items %}
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="cart-table">
+                    <div class="cart-header d-none d-md-grid">
+                        <span>Product</span>
+                        <span>Price</span>
+                        <span>Quantity</span>
+                        <span>Total</span>
+                        <span></span>
+                    </div>
+                    {% for item in cart_items %}
+                    <div class="cart-row">
+                        <div class="cart-product">
+                            {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
+                            {% else %}
+                            <div class="cart-img-placeholder"><i class="fas fa-gift"></i></div>
+                            {% endif %}
+                            <div class="cart-product-info">
+                                <h5><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a></h5>
+                                <small class="text-muted">{{ item.product.category.name }}</small>
+                            </div>
+                        </div>
+                        <div class="cart-price">₹{{ item.product.effective_price }}</div>
+                        <div class="cart-qty">
+                            <form action="{% url 'update_cart' item.id %}" method="POST" class="qty-form">
+                                {% csrf_token %}
+                                <div class="qty-control">
+                                    <button type="button" class="qty-btn minus" onclick="updateQty(this, -1)"><i class="fas fa-minus"></i></button>
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input" onchange="this.form.submit()">
+                                    <button type="button" class="qty-btn plus" onclick="updateQty(this, 1)"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="cart-subtotal">₹{{ item.get_subtotal }}</div>
+                        <div class="cart-remove">
+                            <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn" onclick="return confirm('Remove this item?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="cart-actions mt-4">
+                    <a href="{% url 'product_list' %}" class="btn-outline-gold"><i class="fas fa-arrow-left me-2"></i> Continue Shopping</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h4 class="summary-title">Order Summary</h4>
+                    <div class="summary-row">
+                        <span>Subtotal ({{ cart.get_item_count }} items)</span>
+                        <span>₹{{ cart.get_total }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span class="text-success">{% if cart.get_total >= 999 %}FREE{% else %}₹99{% endif %}</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row total-row">
+                        <span>Total</span>
+                        <span>₹{% if cart.get_total >= 999 %}{{ cart.get_total }}{% else %}{{ cart.get_total|add:"99" }}{% endif %}</span>
+                    </div>
+                    {% if cart.get_total < 999 %}
+                    <p class="free-shipping-msg">Add ₹{{ 999|add:"-"|add:cart.get_total|floatformat:0 }} more for FREE shipping!</p>
+                    {% endif %}
+                    <a href="{% url 'checkout' %}" class="btn-primary-gold btn-full mt-4">
+                        Proceed to Checkout <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                    <div class="secure-badge mt-3">
+                        <i class="fas fa-lock"></i> Secure Checkout with Razorpay
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-cart text-center py-5">
+            <div class="empty-cart-icon"><i class="fas fa-shopping-bag"></i></div>
+            <h3>Your cart is empty</h3>
+            <p class="text-muted">Looks like you haven't added any gifts yet.</p>
+            <a href="{% url 'product_list' %}" class="btn-primary-gold mt-3">Browse Gifts</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateQty(btn, delta) {
+    const form = btn.closest('form');
+    const input = form.querySelector('.qty-input');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    input.value = val;
+    form.submit();
+}
+</script>
+{% endblock %}

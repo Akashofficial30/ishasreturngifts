@@ -1,0 +1,200 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{{ action }} Category{% endblock %}
+{% block nav_categories %}active{% endblock %}
+{% block page_title %}{{ action }} Category{% endblock %}
+
+{% block content %}
+
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+  <a href="{% url 'dashboard_categories' %}" class="btn btn-ghost btn-sm">
+    <i class="fas fa-arrow-left"></i> Back to Categories
+  </a>
+  <div style="height:20px;width:1px;background:var(--border);"></div>
+  <span style="font-size:13px;color:var(--text3);">
+    {% if action == 'Edit' %}Editing: <strong style="color:var(--text);">{{ category.name }}</strong>
+    {% else %}Create a new gift category{% endif %}
+  </span>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start;">
+
+  <!-- LEFT: FORM -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title"><i class="fas fa-tag"></i> Category Details</span>
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card-body" style="display:flex;flex-direction:column;gap:18px;">
+
+        <!-- Name -->
+        <div class="f-group" style="margin:0;">
+          <label class="f-label">Category Name <span style="color:var(--rose2);">*</span></label>
+          <input type="text" name="name" class="f-control" required
+            value="{{ category.name|default:'' }}"
+            placeholder="e.g. Wedding Return Gifts"
+            style="font-size:14px;padding:12px 14px;">
+          <div style="font-size:11.5px;color:var(--text3);margin-top:5px;">
+            The slug (URL) will be auto-generated from this name
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="f-group" style="margin:0;">
+          <label class="f-label">Description</label>
+          <textarea name="description" class="f-control" rows="4"
+            placeholder="Brief description of this category — shown on the categories section..."
+            style="font-size:14px;padding:12px 14px;resize:vertical;min-height:110px;">{{ category.description|default:'' }}</textarea>
+        </div>
+
+        <!-- Image -->
+        <div class="f-group" style="margin:0;">
+          <label class="f-label">Category Image</label>
+
+          {% if category.image %}
+          <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--bg3);border-radius:10px;border:1px solid var(--border);margin-bottom:12px;">
+            <img src="{{ category.image.url }}" style="width:64px;height:64px;object-fit:cover;border-radius:50%;flex-shrink:0;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;">Current Image</div>
+              <div style="font-size:12px;color:var(--text3);">Upload a new image below to replace it</div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div id="catImgZone"
+            style="border:2px dashed rgba(212,168,67,0.4);border-radius:12px;padding:28px;text-align:center;background:var(--bg3);cursor:pointer;transition:all 0.2s;"
+            onclick="document.getElementById('catImgInput').click()"
+            ondragover="event.preventDefault();this.style.borderColor='var(--gold)';"
+            ondragleave="this.style.borderColor='rgba(212,168,67,0.4)';"
+            ondrop="catHandleDrop(event)">
+            <i class="fas fa-image" style="font-size:2rem;color:var(--gold);margin-bottom:10px;display:block;"></i>
+            <div id="catImgText" style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:4px;">
+              Click to upload or drag & drop
+            </div>
+            <div style="font-size:12px;color:var(--text3);">Square image recommended — 300×300px. Shown as circle on homepage.</div>
+            <input type="file" id="catImgInput" name="image" accept="image/*" style="display:none;" onchange="catPreview(this)">
+          </div>
+
+          <div id="catImgPreview" style="display:none;margin-top:12px;padding:12px;background:var(--bg3);border-radius:10px;border:1px solid rgba(212,168,67,0.3);align-items:center;gap:12px;">
+            <img id="catPreviewEl" style="width:56px;height:56px;object-fit:cover;border-radius:50%;flex-shrink:0;">
+            <div style="flex:1;">
+              <div id="catPreviewName" style="font-size:13px;font-weight:600;color:var(--text);"></div>
+              <div id="catPreviewSize" style="font-size:12px;color:var(--text3);"></div>
+            </div>
+            <button type="button" onclick="catClearImg()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;">&times;</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="border-top:1px solid var(--border);padding:20px;display:flex;gap:12px;align-items:center;">
+        <button type="submit" class="btn btn-gold" style="padding:12px 28px;font-size:14px;">
+          <i class="fas fa-save"></i>
+          {% if action == 'Edit' %}Update Category{% else %}Add Category{% endif %}
+        </button>
+        <a href="{% url 'dashboard_categories' %}" class="btn btn-ghost">
+          <i class="fas fa-times"></i> Cancel
+        </a>
+        {% if action == 'Edit' %}
+        <a href="{% url 'product_list' %}?category={{ category.slug }}" target="_blank"
+          class="btn btn-ghost" style="margin-left:auto;">
+          <i class="fas fa-external-link-alt"></i> View Products
+        </a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- RIGHT: INFO SIDEBAR -->
+  <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:84px;">
+
+    {% if action == 'Edit' %}
+    <!-- Category Preview -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title"><i class="fas fa-eye"></i> Preview</span>
+      </div>
+      <div class="card-body" style="text-align:center;">
+        {% if category.image %}
+        <img src="{{ category.image.url }}" style="width:80px;height:80px;object-fit:cover;border-radius:50%;margin:0 auto 12px;display:block;border:3px solid var(--gold-dim);">
+        {% else %}
+        <div style="width:80px;height:80px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:2rem;color:var(--text3);">
+          <i class="fas fa-tag"></i>
+        </div>
+        {% endif %}
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;">{{ category.name }}</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px;font-family:monospace;">{{ category.slug }}</div>
+        <div style="background:var(--gold-dim);color:var(--gold2);font-size:13px;font-weight:700;padding:6px 16px;border-radius:20px;display:inline-block;">
+          {{ category.products.count }} Product{{ category.products.count|pluralize }}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Tips -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title"><i class="fas fa-lightbulb"></i> Tips</span>
+      </div>
+      <div style="padding:0;">
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
+          <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
+            <i class="fas fa-image" style="color:var(--gold);width:14px;"></i> Category Image
+          </div>
+          <div style="font-size:12px;color:var(--text3);line-height:1.6;">Upload a square 300×300px image. It's shown as a circle on the homepage categories section.</div>
+        </div>
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
+          <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
+            <i class="fas fa-link" style="color:var(--blue);width:14px;"></i> URL Slug
+          </div>
+          <div style="font-size:12px;color:var(--text3);line-height:1.6;">The slug is auto-created from the name. For "Wedding Return Gifts" it becomes <code style="background:var(--bg3);padding:1px 5px;border-radius:4px;">wedding-return-gifts</code>.</div>
+        </div>
+        <div style="padding:14px 18px;">
+          <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
+            <i class="fas fa-trash" style="color:var(--rose2);width:14px;"></i> Before Deleting
+          </div>
+          <div style="font-size:12px;color:var(--text3);line-height:1.6;">Move all products to another category before deleting. Deleting a category removes all its products too.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function catPreview(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('catPreviewEl').src = e.target.result;
+    document.getElementById('catPreviewName').textContent = file.name;
+    document.getElementById('catPreviewSize').textContent = (file.size/1024).toFixed(1) + ' KB';
+    document.getElementById('catImgPreview').style.display = 'flex';
+    document.getElementById('catImgText').textContent = 'Image selected ✓';
+    document.getElementById('catImgZone').style.borderColor = 'var(--gold)';
+  };
+  reader.readAsDataURL(file);
+}
+function catClearImg() {
+  document.getElementById('catImgInput').value = '';
+  document.getElementById('catImgPreview').style.display = 'none';
+  document.getElementById('catImgText').textContent = 'Click to upload or drag & drop';
+  document.getElementById('catImgZone').style.borderColor = 'rgba(212,168,67,0.4)';
+}
+function catHandleDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const dt = new DataTransfer(); dt.items.add(file);
+    document.getElementById('catImgInput').files = dt.files;
+    catPreview(document.getElementById('catImgInput'));
+  }
+  document.getElementById('catImgZone').style.borderColor = 'rgba(212,168,67,0.4)';
+}
+</script>
+{% endblock %}

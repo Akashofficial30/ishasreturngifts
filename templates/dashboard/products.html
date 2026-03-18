@@ -1,0 +1,334 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Products{% endblock %}
+{% block nav_products %}active{% endblock %}
+{% block page_title %}Products{% endblock %}
+
+{% block content %}
+<div class="s-header">
+  <div class="s-title">
+    <h2>Product Catalog</h2>
+    <p>Manage your return gift inventory</p>
+  </div>
+  <div class="s-actions">
+    <!-- Download Template -->
+    <a href="{% url 'download_import_template' %}" class="btn btn-ghost" title="Download sample Excel template">
+      <i class="fas fa-download"></i> Template
+    </a>
+    <!-- Import Excel Button -->
+    <button class="btn btn-excel" onclick="openImportModal()">
+      <i class="fas fa-file-excel"></i> Import Excel
+    </button>
+    <!-- Export Excel Button -->
+    <a href="{% url 'export_products_excel' %}" class="btn btn-excel">
+      <i class="fas fa-file-download"></i> Export Excel
+    </a>
+    <!-- Add Product -->
+    <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold">
+      <i class="fas fa-plus"></i> Add Product
+    </a>
+  </div>
+</div>
+
+<!-- Products Card -->
+<div class="card">
+  <!-- Filters -->
+  <div class="filter-bar">
+    <form method="GET" style="display:flex;gap:10px;flex-wrap:wrap;width:100%;align-items:center;">
+      <input type="text" name="search" class="f-control filter-search" placeholder="Search products..." value="{{ search }}">
+      <select name="category" class="f-control">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat.slug }}" {% if category_filter == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+      <select name="stock" class="f-control">
+        <option value="">All Stock</option>
+        <option value="low" {% if stock_filter == 'low' %}selected{% endif %}>⚠ Low Stock (≤10)</option>
+        <option value="out" {% if stock_filter == 'out' %}selected{% endif %}>✗ Out of Stock</option>
+      </select>
+      <button type="submit" class="btn btn-gold btn-sm"><i class="fas fa-filter"></i> Filter</button>
+      <a href="{% url 'dashboard_products' %}" class="btn btn-ghost btn-sm"><i class="fas fa-times"></i></a>
+    </form>
+  </div>
+
+  <!-- Table -->
+  <div style="overflow-x:auto;">
+    <table class="d-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Offer</th>
+          <th>Stock</th>
+          <th>Featured</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:11px;">
+              {% if product.image %}
+              <img src="{{ product.image.url }}" class="p-thumb" alt="{{ product.name }}">
+              {% else %}
+              <div class="p-thumb-ph"><i class="fas fa-gift"></i></div>
+              {% endif %}
+              <div>
+                <div style="font-weight:600;font-size:13px;color:var(--text);">{{ product.name }}</div>
+                <div style="font-size:11px;color:var(--text3);">{{ product.description|truncatechars:36 }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text3);font-size:13px;">{{ product.category.name }}</td>
+          <td style="color:var(--text2);">₹{{ product.price }}</td>
+          <td>
+            {% if product.offer_price %}
+            <span style="color:var(--gold);font-weight:700;">₹{{ product.offer_price }}</span>
+            {% else %}
+            <span style="color:var(--text3);">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if product.stock_quantity == 0 %}
+            <span style="color:var(--rose2);font-weight:700;font-size:12px;">Out of Stock</span>
+            {% elif product.stock_quantity <= 10 %}
+            <span style="color:var(--orange);font-weight:700;">{{ product.stock_quantity }} ⚠</span>
+            {% else %}
+            <span style="color:var(--green);font-weight:700;">{{ product.stock_quantity }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if product.is_featured %}
+            <i class="fas fa-star" style="color:var(--gold);font-size:16px;"></i>
+            {% else %}
+            <i class="far fa-star" style="color:var(--text3);font-size:16px;"></i>
+            {% endif %}
+          </td>
+          <td>
+            {% if product.is_active %}
+            <span class="badge b-active">Active</span>
+            {% else %}
+            <span class="badge b-inactive">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex;gap:5px;">
+              <a href="{% url 'dashboard_product_edit' product.id %}" class="btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
+              <a href="{% url 'product_detail' product.slug %}" class="btn-icon" title="View on site" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+              <a href="{% url 'dashboard_product_delete' product.id %}" class="btn-icon del" title="Delete"><i class="fas fa-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">
+            <div class="empty">
+              <i class="fas fa-gift"></i>
+              <p>No products found.</p>
+              <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;">
+                <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Add Product</a>
+                <button onclick="openImportModal()" class="btn btn-excel btn-sm"><i class="fas fa-file-excel"></i> Import Excel</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  {% if products %}
+  <div style="padding:12px 20px;border-top:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <span style="font-size:12.5px;color:var(--text3);">Showing {{ products.count }} product{{ products.count|pluralize }}</span>
+    <div style="display:flex;gap:8px;">
+      <button onclick="openImportModal()" class="btn btn-excel btn-sm"><i class="fas fa-file-excel"></i> Import More</button>
+      <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Add Product</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     IMPORT EXCEL MODAL
+═══════════════════════════════════════════ -->
+<div id="importModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:0;max-width:560px;width:100%;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.6);">
+
+    <!-- Modal Header -->
+    <div style="padding:22px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg3);">
+      <div>
+        <h3 style="font-size:17px;font-weight:700;color:var(--text);margin:0 0 3px;">
+          <i class="fas fa-file-excel" style="color:#4ade80;margin-right:8px;"></i>Import Products from Excel
+        </h3>
+        <p style="font-size:12.5px;color:var(--text3);margin:0;">Upload an Excel file to bulk-add products</p>
+      </div>
+      <button onclick="closeImportModal()" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;padding:4px;">&times;</button>
+    </div>
+
+    <!-- Modal Body -->
+    <div style="padding:28px;">
+
+      <!-- Step Guide -->
+      <div style="display:flex;gap:0;margin-bottom:24px;background:var(--bg3);border-radius:10px;overflow:hidden;border:1px solid var(--border);">
+        <div style="flex:1;padding:14px 16px;text-align:center;border-right:1px solid var(--border);">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--gold-dim);color:var(--gold);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;">1</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text);">Download</div>
+          <div style="font-size:11px;color:var(--text3);">Get template</div>
+        </div>
+        <div style="flex:1;padding:14px 16px;text-align:center;border-right:1px solid var(--border);">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--blue-dim);color:var(--blue);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;">2</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text);">Fill Data</div>
+          <div style="font-size:11px;color:var(--text3);">Add products</div>
+        </div>
+        <div style="flex:1;padding:14px 16px;text-align:center;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--green-dim);color:var(--green);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;">3</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text);">Upload</div>
+          <div style="font-size:11px;color:var(--text3);">Import below</div>
+        </div>
+      </div>
+
+      <!-- Download Template -->
+      <div style="background:var(--gold-dim);border:1px solid rgba(212,168,67,0.25);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--gold2);">📥 Download Template First</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px;">Fill in the template and upload it below</div>
+        </div>
+        <a href="{% url 'download_import_template' %}" class="btn btn-gold btn-sm" style="flex-shrink:0;">
+          <i class="fas fa-download"></i> Template
+        </a>
+      </div>
+
+      <!-- Required Columns Info -->
+      <div style="background:var(--bg3);border-radius:10px;padding:14px 16px;margin-bottom:20px;border:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:0.5px;">REQUIRED COLUMNS IN YOUR EXCEL:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:rgba(192,57,43,0.15);color:var(--rose2);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(192,57,43,0.3);">Name *</span>
+          <span style="background:rgba(192,57,43,0.15);color:var(--rose2);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(192,57,43,0.3);">Category *</span>
+          <span style="background:rgba(192,57,43,0.15);color:var(--rose2);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(192,57,43,0.3);">Price *</span>
+          <span style="background:var(--bg4);color:var(--text3);font-size:11px;padding:3px 10px;border-radius:20px;">Description</span>
+          <span style="background:var(--bg4);color:var(--text3);font-size:11px;padding:3px 10px;border-radius:20px;">Offer Price</span>
+          <span style="background:var(--bg4);color:var(--text3);font-size:11px;padding:3px 10px;border-radius:20px;">Stock</span>
+          <span style="background:var(--bg4);color:var(--text3);font-size:11px;padding:3px 10px;border-radius:20px;">Featured</span>
+          <span style="background:var(--bg4);color:var(--text3);font-size:11px;padding:3px 10px;border-radius:20px;">Active</span>
+        </div>
+      </div>
+
+      <!-- Upload Form -->
+      <form method="POST" action="{% url 'import_products_excel' %}" enctype="multipart/form-data" id="importForm">
+        {% csrf_token %}
+
+        <!-- Drop Zone -->
+        <div id="dropZone" style="border:2px dashed rgba(34,197,94,0.4);border-radius:12px;padding:32px;text-align:center;background:var(--bg3);cursor:pointer;transition:all 0.2s;"
+             onclick="document.getElementById('excelFile').click()"
+             ondragover="handleDragOver(event)"
+             ondragleave="handleDragLeave(event)"
+             ondrop="handleDrop(event)">
+          <i class="fas fa-cloud-upload-alt" style="font-size:2.5rem;color:#4ade80;margin-bottom:12px;display:block;"></i>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;" id="dropText">
+            Click to choose file or drag & drop here
+          </div>
+          <div style="font-size:12px;color:var(--text3);">Supports .xlsx and .xls files</div>
+          <input type="file" id="excelFile" name="excel_file" accept=".xlsx,.xls" style="display:none;" onchange="handleFileSelect(this)">
+        </div>
+
+        <!-- Selected File Info -->
+        <div id="fileInfo" style="display:none;margin-top:12px;padding:12px 16px;background:var(--green-dim);border:1px solid rgba(34,197,94,0.3);border-radius:10px;display:flex;align-items:center;gap:12px;">
+          <i class="fas fa-file-excel" style="color:#4ade80;font-size:1.5rem;"></i>
+          <div style="flex:1;">
+            <div id="fileName" style="font-size:13.5px;font-weight:600;color:var(--text);"></div>
+            <div id="fileSize" style="font-size:12px;color:var(--text3);"></div>
+          </div>
+          <button type="button" onclick="clearFile()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;">&times;</button>
+        </div>
+
+        <!-- Submit -->
+        <div style="display:flex;gap:10px;margin-top:20px;">
+          <button type="submit" id="importBtn" class="btn btn-gold" style="flex:1;" disabled>
+            <i class="fas fa-upload"></i> Import Products
+          </button>
+          <button type="button" onclick="closeImportModal()" class="btn btn-ghost">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Modal
+function openImportModal() {
+  document.getElementById('importModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeImportModal() {
+  document.getElementById('importModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.getElementById('importModal').addEventListener('click', function(e) {
+  if (e.target === this) closeImportModal();
+});
+
+// File handling
+function handleFileSelect(input) {
+  if (input.files && input.files[0]) {
+    showFileInfo(input.files[0]);
+  }
+}
+function showFileInfo(file) {
+  document.getElementById('dropText').textContent = 'File selected ✓';
+  document.getElementById('dropZone').style.borderColor = 'rgba(34,197,94,0.8)';
+  document.getElementById('dropZone').style.background = 'rgba(34,197,94,0.05)';
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
+  document.getElementById('fileInfo').style.display = 'flex';
+  document.getElementById('importBtn').disabled = false;
+}
+function clearFile() {
+  document.getElementById('excelFile').value = '';
+  document.getElementById('dropText').textContent = 'Click to choose file or drag & drop here';
+  document.getElementById('dropZone').style.borderColor = 'rgba(34,197,94,0.4)';
+  document.getElementById('dropZone').style.background = 'var(--bg3)';
+  document.getElementById('fileInfo').style.display = 'none';
+  document.getElementById('importBtn').disabled = true;
+}
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').style.borderColor = '#4ade80';
+  document.getElementById('dropZone').style.background = 'rgba(34,197,94,0.08)';
+}
+function handleDragLeave(e) {
+  document.getElementById('dropZone').style.borderColor = 'rgba(34,197,94,0.4)';
+  document.getElementById('dropZone').style.background = 'var(--bg3)';
+}
+function handleDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('excelFile').files = dt.files;
+    showFileInfo(file);
+  } else {
+    alert('Please drop an Excel file (.xlsx or .xls)');
+    handleDragLeave(e);
+  }
+}
+
+// Show loading on submit
+document.getElementById('importForm').addEventListener('submit', function() {
+  const btn = document.getElementById('importBtn');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+  btn.disabled = true;
+});
+</script>
+{% endblock %}
