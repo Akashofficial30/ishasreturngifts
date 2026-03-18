@@ -84,8 +84,9 @@
 
       {% if user.is_authenticated %}
       <div class="dropdown">
-        <button class="irg-user-btn dropdown-toggle" data-bs-toggle="dropdown">
+        <button class="irg-user-btn dropdown-toggle" data-bs-toggle="dropdown" style="width:auto;padding:6px 14px 6px 8px;gap:8px;display:flex;align-items:center;border-radius:50px;">
           <div class="irg-user-av">{{ user.username|first|upper }}</div>
+          <span style="font-size:13px;font-weight:600;color:var(--text2);white-space:nowrap;max-width:100px;overflow:hidden;text-overflow:ellipsis;" class="d-none d-lg-inline">Hi, {{ user.first_name|default:user.username }}</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-end irg-user-dropdown">
           <li>
