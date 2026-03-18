@@ -366,16 +366,23 @@
 
             <!-- Action Buttons -->
             <div class="pd-actions">
-              <!-- Add to Cart -->
-              <button type="submit" class="pd-btn-cart" name="action" value="cart">
+              {% if user.is_authenticated %}
+              <!-- Logged in: show cart + buy now -->
+              <button type="submit" class="pd-btn-cart">
                 <i class="fas fa-shopping-bag"></i> Add to Cart
               </button>
-              <!-- Buy Now -->
-              <button type="submit" class="pd-btn-buy" name="action" value="buy"
-                onclick="document.getElementById('buyNowFlag').value='1';">
+              <button type="button" class="pd-btn-buy" onclick="buyNow()">
                 <i class="fas fa-bolt"></i> Buy Now
               </button>
-              <input type="hidden" name="buy_now" id="buyNowFlag" value="0">
+              {% else %}
+              <!-- Not logged in: show login prompt buttons -->
+              <button type="button" class="pd-btn-cart" onclick="showLoginPrompt()">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+              </button>
+              <button type="button" class="pd-btn-buy" onclick="showLoginPrompt()">
+                <i class="fas fa-bolt"></i> Buy Now
+              </button>
+              {% endif %}
             </div>
           </form>
 
@@ -474,6 +481,69 @@
 </section>
 {% endif %}
 
+
+<!-- ═══ LOGIN PROMPT MODAL ═══ -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);">
+  <div style="background:white;border-radius:20px;padding:0;max-width:420px;width:100%;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.25);animation:modalPop 0.3s ease;">
+
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#1c0909,#2e1212);padding:32px 28px;text-align:center;position:relative;">
+      <button onclick="closeLoginModal()" style="position:absolute;top:14px;right:16px;background:rgba(255,255,255,0.1);border:none;width:30px;height:30px;border-radius:50%;color:rgba(255,255,255,0.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>
+      <div style="width:68px;height:68px;border-radius:50%;background:rgba(192,57,43,0.25);border:2px solid rgba(192,57,43,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.8rem;">🎁</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:white;margin:0 0 6px;">Sign In to Continue</h3>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0;">Please sign in to add items to cart or purchase</p>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:28px;">
+
+      <!-- Benefits -->
+      <div style="background:#fdf9f5;border-radius:12px;padding:14px 16px;margin-bottom:22px;border:1px solid #eeddd0;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a07060;margin-bottom:10px;">Why sign in?</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
+            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Track your orders in real time
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
+            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Faster checkout experience
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
+            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Secure payment & order history
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
+            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Exclusive offers for members
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a href="{% url 'login' %}?next={{ request.path }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:linear-gradient(135deg,#c0392b,#2e1212);color:white;border:none;border-radius:50px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(192,57,43,0.35);transition:all 0.3s;">
+          <i class="fas fa-sign-in-alt"></i> Sign In to My Account
+        </a>
+        <a href="{% url 'register' %}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:transparent;color:#c0392b;border:2px solid #c0392b;border-radius:50px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.3s;">
+          <i class="fas fa-user-plus"></i> Create New Account
+        </a>
+        <button onclick="closeLoginModal()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:transparent;color:#a07060;border:1.5px solid #eeddd0;border-radius:50px;font-family:inherit;font-size:13.5px;cursor:pointer;transition:all 0.2s;">
+          <i class="fas fa-times"></i> Continue Browsing
+        </button>
+      </div>
+
+      <p style="text-align:center;font-size:12px;color:#a07060;margin-top:16px;margin-bottom:0;">
+        <i class="fas fa-lock" style="color:#c0392b;margin-right:4px;"></i>
+        Your information is safe and encrypted
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes modalPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -513,18 +583,38 @@ function copyLink() {
   });
 }
 
-// Buy Now — redirect to cart then checkout
-document.querySelectorAll('[value="buy"]').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    const form = document.getElementById('cartForm');
-    const action = form.action;
-    const data = new FormData(form);
-    fetch(action, { method: 'POST', body: data, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-      .then(() => { window.location.href = '/orders/checkout/'; })
-      .catch(() => { form.submit(); });
-  });
+// Login prompt modal
+function showLoginPrompt() {
+  document.getElementById('loginModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.getElementById('loginModal').addEventListener('click', function(e) {
+  if (e.target === this) closeLoginModal();
 });
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLoginModal();
+});
+
+// Buy Now - add to cart then go to checkout
+function buyNow() {
+  const form = document.getElementById('cartForm');
+  if (!form) return;
+  const data = new FormData(form);
+  fetch(form.action, {
+    method: 'POST',
+    body: data,
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  })
+  .then(() => { window.location.href = '/orders/checkout/'; })
+  .catch(() => {
+    form.submit();
+    setTimeout(() => { window.location.href = '/orders/checkout/'; }, 500);
+  });
+}
 
 // Image transition
 const mainImg = document.getElementById('mainImage');
