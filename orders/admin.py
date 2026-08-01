@@ -17,7 +17,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ['order_id', 'payment_id', 'razorpay_order_id', 'created_at', 'updated_at']
     inlines = [OrderItemInline]
     fieldsets = (
-        ('Order Info', {'fields': ('order_id', 'order_status', 'notes')}),
+        ('Order Info', {'fields': ('order_id', 'order_status', 'notess')}),
         ('Customer', {'fields': ('customer_name', 'customer_email', 'customer_phone')}),
         ('Shipping', {'fields': ('address', 'city', 'state', 'pincode')}),
         ('Payment', {'fields': ('total_price', 'payment_status', 'payment_id', 'razorpay_order_id')}),
