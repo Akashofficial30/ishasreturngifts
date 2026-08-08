@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Count
 from .models import Product, Category, Cart, CartItem, Testimonial
 
 
@@ -12,9 +13,15 @@ def get_or_create_cart(request):
 
 
 def home(request):
-    featured_products = Product.objects.filter(is_featured=True, is_active=True)[:8]
-    popular_products = Product.objects.filter(is_active=True).order_by('-created_at')[:8]
-    categories = Category.objects.all()
+    # select_related('category') — the product card renders product.category.name.
+    featured_products = Product.objects.filter(
+        is_featured=True, is_active=True
+    ).select_related('category')[:8]
+    popular_products = Product.objects.filter(
+        is_active=True
+    ).select_related('category').order_by('-created_at')[:8]
+    # annotate — the category card renders a per-category product count.
+    categories = Category.objects.annotate(product_count=Count('products'))
     testimonials = Testimonial.objects.filter(is_active=True)[:3]
     return render(request, 'home.html', {
         'featured_products': featured_products,
@@ -26,7 +33,7 @@ def home(request):
 
 def product_list(request):
     products = Product.objects.filter(is_active=True).select_related('category')
-    categories = Category.objects.all()
+    categories = Category.objects.annotate(product_count=Count('products'))
     category_slug = request.GET.get('category', '')
     search = request.GET.get('search', '')
     featured = request.GET.get('featured', '')
@@ -36,15 +43,19 @@ def product_list(request):
         products = products.filter(name__icontains=search)
     if featured:
         products = products.filter(is_featured=True)
+    # Evaluate both querysets once: the template iterates them, so a separate
+    # .count() and a separate lookup for the active category are wasted queries.
+    categories = list(categories)
+    products = list(products)
     active_category = None
     if category_slug:
-        active_category = Category.objects.filter(slug=category_slug).first()
+        active_category = next((c for c in categories if c.slug == category_slug), None)
     return render(request, 'products/product_list.html', {
         'products': products,
         'categories': categories,
         'active_category': active_category,
         'search': search,
-        'total_count': products.count(),
+        'total_count': len(products),
     })
 
 

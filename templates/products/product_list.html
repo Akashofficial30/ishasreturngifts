@@ -48,7 +48,7 @@
                             <li>
                                 <a href="{% url 'product_list' %}?category={{ category.slug }}" class="filter-link {% if selected_category == category.slug %}active{% endif %}">
                                     {{ category.name }}
-                                    <span class="filter-count">{{ category.products.count }}</span>
+                                    <span class="filter-count">{{ category.product_count }}</span>
                                 </a>
                             </li>
                             {% endfor %}

@@ -68,10 +68,12 @@ class Cart(models.Model):
         return f"Cart {self.session_key}"
 
     def get_total(self):
-        return sum(item.get_subtotal() for item in self.items.all())
+        # select_related keeps this at one query — get_subtotal reads
+        # item.product.effective_price, which otherwise fetches per item.
+        return sum(item.get_subtotal() for item in self.items.select_related('product'))
 
     def get_item_count(self):
-        return sum(item.quantity for item in self.items.all())
+        return self.items.aggregate(total=models.Sum('quantity'))['total'] or 0
 
 
 class CartItem(models.Model):
