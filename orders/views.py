@@ -65,7 +65,8 @@ def place_order(request):
         Cart.objects.filter(session_key=request.session.session_key).delete()
         send_order_confirmation_email(order)
         send_admin_order_notification(order)
-        # return redirect('order_confirmation', order_id=order.id)
+        # COD is settled on delivery — it must not reach the payment gateway.
+        return redirect('order_confirmation', order_id=order.id)
 
     request.session['pending_order_id'] = order.id
     return redirect('initiate_payment', order_id=order.id)

@@ -1,3 +1,5 @@
+import logging
+
 import razorpay
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
@@ -7,6 +9,8 @@ from orders.models import Order
 from orders.email_utils import send_order_confirmation_email, send_admin_order_notification
 from products.models import Cart
 from .models import Payment
+
+logger = logging.getLogger(__name__)
 
 
 def get_razorpay_client():
@@ -19,15 +23,30 @@ def initiate_payment(request, order_id):
 
     amount_paise = int(order.total_price * 100)
 
-    razorpay_order = client.order.create({
-        'amount': amount_paise,
-        'currency': 'INR',
-        'receipt': str(order.order_id),
-        'notes': {
-            'customer_name': order.customer_name,
-            'customer_phone': order.customer_phone,
-        }
-    })
+    # The order row already exists at this point, so a gateway failure must not
+    # surface as a 500 — the customer would be left staring at a crash with an
+    # order silently sitting in the database.
+    try:
+        razorpay_order = client.order.create({
+            'amount': amount_paise,
+            'currency': 'INR',
+            'receipt': str(order.order_id),
+            'notes': {
+                'customer_name': order.customer_name,
+                'customer_phone': order.customer_phone,
+            }
+        })
+    except Exception:
+        logger.exception('Razorpay order creation failed for order %s', order.id)
+        order.order_status = 'pending'
+        order.notes = f'{order.notes}\nPayment gateway unreachable at checkout.'.strip()
+        order.save(update_fields=['order_status', 'notes'])
+        messages.error(
+            request,
+            'We could not reach the payment gateway. Your order has been saved — '
+            'please contact us on WhatsApp with your order ID to complete payment.'
+        )
+        return redirect('order_confirmation', order_id=order.id)
 
     order.razorpay_order_id = razorpay_order['id']
     order.save()
