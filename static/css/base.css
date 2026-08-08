@@ -46,9 +46,14 @@ img { max-width: 100%; height: auto; }
   margin-inline: -12px;
 }
 
-.row > [class*="col-"] {
-  padding-inline: 12px;
+/* `.row > *`, not `.row > [class*="col-"]` — an attribute selector scores
+   (0,2,0) and would outrank every .col-* class at (0,1,0), forcing all columns
+   to full width. This ties at (0,1,0) so the column rules below win on order. */
+.row > * {
+  flex-shrink: 0;
   width: 100%;
+  max-width: 100%;
+  padding-inline: 12px;
 }
 
 /* Gutters. Bootstrap's g-* sets both axes via a negative-margin trick; a plain
@@ -159,6 +164,81 @@ img { max-width: 100%; height: auto; }
   border-radius: .5rem;
 }
 
+/* --- Buttons -------------------------------------------------------------- */
+/* .btn came from Bootstrap; .btn-gold was never defined anywhere and relied on
+   .btn alone for its appearance, so the search button lost all styling. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4em;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: var(--r-xs, 6px);
+  background: transparent;
+  color: inherit;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn-lg { padding: .5rem 1rem; font-size: 1.125rem; border-radius: var(--r-sm, 10px); }
+.btn-sm { padding: .25rem .5rem; font-size: .875rem; }
+
+.btn-gold {
+  background: var(--gold, #c9972a);
+  border-color: var(--gold, #c9972a);
+  color: #fff;
+}
+.btn-gold:hover { background: var(--gold2, #f0c96a); border-color: var(--gold2, #f0c96a); color: var(--dark, #1c0909); }
+
+/* --- Input group ---------------------------------------------------------- */
+.input-group {
+  display: flex;
+  width: 100%;
+}
+.input-group > .form-control {
+  flex: 1 1 auto;
+  width: 1%;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.input-group > .btn {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+/* --- Breadcrumb ----------------------------------------------------------- */
+/* all.css styles .breadcrumb but inherited the list reset and the "/" separator
+   from Bootstrap, so the trail rendered as a numbered <ol>. */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.breadcrumb-item { display: flex; align-items: center; }
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "/";
+  padding-inline-end: .5rem;
+  opacity: .6;
+}
+
+/* --- Misc utilities ------------------------------------------------------- */
+.position-relative { position: relative; }
+
+.dropdown-toggle { cursor: pointer; }
+
 /* --- Alerts --------------------------------------------------------------- */
 .alert {
   position: relative;
@@ -241,6 +321,29 @@ img { max-width: 100%; height: auto; }
   fill: currentColor;
   vertical-align: -.125em;
   flex-shrink: 0;
+}
+
+/* Two nav rules give the icon a fixed 16px box so labels line up — sized for a
+   font glyph, which ignores width. An <svg> honours it and comes out stretched,
+   so pin these back to square. Specificity beats the .irg-* rules either way. */
+.irg-dropdown a svg.icon,
+.irg-mobile-nav a svg.icon {
+  width: 1em;
+  margin-inline-end: 4px;
+}
+
+/* --- Header overflow on small screens ------------------------------------- */
+/* .irg-header-inner needs ~451px for brand + search + cart + login + burger,
+   and .irg-actions is flex-shrink:0, so the header pushed the page sideways on
+   a 390px phone. (Pre-existing: the Bootstrap build overflowed to 429px here.)
+   Both the search and the login link already appear inside the mobile menu, so
+   collapsing them into the hamburger follows the design's own intent. */
+/* Two classes deep, because all.css loads after this file and defines these at
+   single-class specificity — an equal-specificity rule here would lose. */
+@media (max-width: 575px) {
+  .irg-header .irg-header-inner { gap: 12px; }
+  .irg-actions .irg-search-wrap,
+  .irg-actions .irg-login-btn { display: none; }
 }
 
 /* --- Accessibility -------------------------------------------------------- */
