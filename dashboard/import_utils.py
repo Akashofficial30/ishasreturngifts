@@ -1,6 +1,40 @@
+from decimal import Decimal, InvalidOperation
+
 import openpyxl
 from products.models import Product, Category
 from django.utils.text import slugify
+
+# A guard against a spreadsheet with a stray million-row selection exhausting
+# memory on a small instance.
+MAX_IMPORT_ROWS = 5000
+
+
+def cell_text(row_data, *keys, default=''):
+    """Text from the first key present with a non-empty value.
+
+    openpyxl yields None for an empty cell, and the key is still present, so
+    dict.get(key, default) returns None rather than the default — str(None)
+    then silently produced products named "None".
+    """
+    for key in keys:
+        value = row_data.get(key)
+        if value is not None and str(value).strip():
+            return str(value).strip()
+    return default
+
+
+def parse_money(raw):
+    """Decimal from a spreadsheet cell, tolerating '₹' and thousands commas."""
+    if raw is None or not str(raw).strip():
+        return None
+    cleaned = str(raw).replace('₹', '').replace(',', '').strip()
+    try:
+        value = Decimal(cleaned)
+    except (InvalidOperation, ValueError):
+        return None
+    # Decimal, not float: DecimalField columns should never inherit binary
+    # floating point error from the import path.
+    return value.quantize(Decimal('0.01')) if value >= 0 else None
 
 
 def import_products_from_excel(file):
@@ -13,7 +47,9 @@ def import_products_from_excel(file):
     success = 0
 
     try:
-        wb = openpyxl.load_workbook(file)
+        # data_only=True returns the cached result of a formula rather than the
+        # formula text, so a Price of "=B2*0.8" imports as a number.
+        wb = openpyxl.load_workbook(file, data_only=True, read_only=True)
         ws = wb.active
     except Exception as e:
         return 0, [f"Could not read Excel file: {str(e)}"]
@@ -30,8 +66,15 @@ def import_products_from_excel(file):
 
     # Process each row starting from row 2
     for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+        if row_num - 1 > MAX_IMPORT_ROWS:
+            errors.append(
+                f"Stopped at row {row_num}: more than {MAX_IMPORT_ROWS} rows. "
+                'Please split the file.'
+            )
+            break
         try:
-            if not any(row):  # Skip empty rows
+            # `any(row)` treats a row of zeros as empty; test for actual content.
+            if not any(cell is not None and str(cell).strip() for cell in row):
                 continue
 
             row_data = {}
@@ -39,58 +82,74 @@ def import_products_from_excel(file):
                 if i < len(headers) and headers[i]:
                     row_data[headers[i]] = val
 
-            name = str(row_data.get('name', '')).strip()
+            name = cell_text(row_data, 'name')
             if not name:
                 errors.append(f"Row {row_num}: Name is empty — skipped")
                 continue
 
             # Get or create category
-            cat_name = str(row_data.get('category', 'General')).strip()
+            cat_name = cell_text(row_data, 'category', default='General')
             cat_slug = slugify(cat_name)
+            if not cat_slug:
+                # slugify strips non-Latin scripts entirely, and a blank slug
+                # would collide every such category onto one row.
+                errors.append(
+                    f"Row {row_num}: Category '{cat_name}' has no usable name — skipped"
+                )
+                continue
             category, _ = Category.objects.get_or_create(
                 slug=cat_slug,
                 defaults={'name': cat_name, 'description': ''}
             )
 
             # Price
-            try:
-                price = float(str(row_data.get('price', 0)).replace('₹', '').replace(',', '').strip())
-            except (ValueError, TypeError):
+            price = parse_money(row_data.get('price'))
+            if price is None:
                 errors.append(f"Row {row_num}: Invalid price for '{name}' — skipped")
                 continue
 
             # Offer price
-            offer_price = None
-            op_val = row_data.get('offer price') or row_data.get('offer_price') or row_data.get('offerprice')
-            if op_val:
-                try:
-                    offer_price = float(str(op_val).replace('₹', '').replace(',', '').strip())
-                except (ValueError, TypeError):
-                    offer_price = None
+            offer_price = parse_money(
+                row_data.get('offer price')
+                or row_data.get('offer_price')
+                or row_data.get('offerprice')
+            )
+            if offer_price is not None and offer_price >= price:
+                errors.append(
+                    f"Row {row_num}: Offer price for '{name}' is not below the "
+                    'price — ignored'
+                )
+                offer_price = None
 
             # Stock
             stock = 0
             stock_val = row_data.get('stock') or row_data.get('stock quantity') or row_data.get('quantity')
             if stock_val:
                 try:
-                    stock = int(float(str(stock_val).strip()))
+                    stock = max(0, int(float(str(stock_val).strip())))
                 except (ValueError, TypeError):
                     stock = 0
 
             # Featured
-            featured_val = str(row_data.get('featured', 'no')).strip().lower()
-            is_featured = featured_val in ('yes', 'true', '1', 'y')
+            is_featured = cell_text(row_data, 'featured', default='no').lower() in (
+                'yes', 'true', '1', 'y'
+            )
 
             # Active
-            active_val = str(row_data.get('active', 'yes')).strip().lower()
-            is_active = active_val not in ('no', 'false', '0', 'n')
+            is_active = cell_text(row_data, 'active', default='yes').lower() not in (
+                'no', 'false', '0', 'n'
+            )
 
             # Description
-            description = str(row_data.get('description', f'{name} - premium return gift')).strip()
+            description = cell_text(
+                row_data, 'description', default=f'{name} - premium return gift'
+            )
 
-            # Generate unique slug
-            slug = slugify(name)
-            base_slug = slug
+            # Generate unique slug. slugify can return '' for a name written in
+            # a non-Latin script, and a product with an empty slug has no
+            # reachable detail page.
+            base_slug = slugify(name) or f'product-{row_num}'
+            slug = base_slug
             counter = 1
             while Product.objects.filter(slug=slug).exists():
                 slug = f"{base_slug}-{counter}"
@@ -120,6 +179,7 @@ def generate_sample_excel():
     """Generate a sample Excel template for product import"""
     import io
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
 
     wb = openpyxl.Workbook()
     ws = wb.active
@@ -143,7 +203,7 @@ def generate_sample_excel():
         cell.fill = header_fill
         cell.alignment = center
         cell.border = thin
-        ws.column_dimensions[chr(64 + i)].width = w
+        ws.column_dimensions[get_column_letter(i)].width = w
 
     ws.row_dimensions[1].height = 24
 
