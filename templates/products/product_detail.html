@@ -212,7 +212,7 @@
 <!-- WELCOME BAR for logged-in user -->
 {% if user.is_authenticated %}
 <div class="pd-welcome-bar">
-  <i class="fas fa-hand-sparkles" style="color:#f0c96a;margin-right:6px;"></i>
+  <svg class="icon" aria-hidden="true" style="color:#f0c96a;margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-hand-sparkles"></use></svg>
   Welcome back, <strong>{{ user.first_name|default:user.username }}</strong>! 🎁
   Enjoy shopping at Isha's Return Gifts.
 </div>
@@ -251,7 +251,7 @@
             class="pd-main-img" id="mainImage">
           {% else %}
           <div class="pd-img-placeholder">
-            <i class="fas fa-gift"></i>
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg>
           </div>
           {% endif %}
         </div>
@@ -271,16 +271,16 @@
         <!-- Trust Badges under image -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px;">
           <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fdf9f5;border-radius:10px;border:1px solid #eeddd0;font-size:12px;color:#6b3a2a;">
-            <i class="fas fa-shield-alt" style="color:#c0392b;"></i> 100% Genuine Product
+            <svg class="icon" aria-hidden="true" style="color:#c0392b;"><use href="{% static 'icons/sprite.svg' %}#i-shield-alt"></use></svg> 100% Genuine Product
           </div>
           <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fdf9f5;border-radius:10px;border:1px solid #eeddd0;font-size:12px;color:#6b3a2a;">
-            <i class="fas fa-truck" style="color:#c0392b;"></i> Free Shipping ₹999+
+            <svg class="icon" aria-hidden="true" style="color:#c0392b;"><use href="{% static 'icons/sprite.svg' %}#i-truck"></use></svg> Free Shipping ₹999+
           </div>
           <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fdf9f5;border-radius:10px;border:1px solid #eeddd0;font-size:12px;color:#6b3a2a;">
-            <i class="fas fa-gift" style="color:#c0392b;"></i> Gift Packaging Available
+            <svg class="icon" aria-hidden="true" style="color:#c0392b;"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg> Gift Packaging Available
           </div>
           <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fdf9f5;border-radius:10px;border:1px solid #eeddd0;font-size:12px;color:#6b3a2a;">
-            <i class="fas fa-undo" style="color:#c0392b;"></i> 7-Day Easy Returns
+            <svg class="icon" aria-hidden="true" style="color:#c0392b;"><use href="{% static 'icons/sprite.svg' %}#i-undo"></use></svg> 7-Day Easy Returns
           </div>
         </div>
       </div>
@@ -291,7 +291,7 @@
 
           <!-- Category Tag -->
           <a href="{% url 'product_list' %}?category={{ product.category.slug }}" class="pd-category">
-            <i class="fas fa-tag"></i> {{ product.category.name }}
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tag"></use></svg> {{ product.category.name }}
           </a>
 
           <!-- Product Name -->
@@ -300,9 +300,9 @@
           <!-- Star Rating -->
           <div class="pd-rating">
             <div class="pd-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i>
-              <i class="fas fa-star"></i><i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg>
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg>
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-star-half-alt"></use></svg>
             </div>
             <span class="pd-rating-count">4.5 · 28 reviews</span>
           </div>
@@ -333,10 +333,10 @@
           <div class="pd-stock {% if product.is_in_stock %}instock{% else %}outstock{% endif %}">
             <div class="pd-stock-dot"></div>
             {% if product.is_in_stock %}
-            <i class="fas fa-check-circle"></i>
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg>
             In Stock · <span style="opacity:0.8;">{{ product.stock_quantity }} units available</span>
             {% else %}
-            <i class="fas fa-times-circle"></i> Out of Stock
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times-circle"></use></svg> Out of Stock
             {% endif %}
           </div>
 
@@ -355,12 +355,12 @@
             <div class="pd-qty-label">Quantity</div>
             <div class="pd-qty-wrap">
               <button type="button" class="pd-qty-btn" onclick="changeQty(-1)">
-                <i class="fas fa-minus"></i>
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-minus"></use></svg>
               </button>
               <input type="number" name="quantity" id="qtyInput" value="1"
                 min="1" max="{{ product.stock_quantity }}" class="pd-qty-input">
               <button type="button" class="pd-qty-btn" onclick="changeQty(1)">
-                <i class="fas fa-plus"></i>
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg>
               </button>
             </div>
 
@@ -369,18 +369,18 @@
               {% if user.is_authenticated %}
               <!-- Logged in: show cart + buy now -->
               <button type="submit" class="pd-btn-cart">
-                <i class="fas fa-shopping-bag"></i> Add to Cart
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg> Add to Cart
               </button>
               <button type="button" class="pd-btn-buy" onclick="buyNow()">
-                <i class="fas fa-bolt"></i> Buy Now
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-bolt"></use></svg> Buy Now
               </button>
               {% else %}
               <!-- Not logged in: show login prompt buttons -->
               <button type="button" class="pd-btn-cart" onclick="showLoginPrompt()">
-                <i class="fas fa-shopping-bag"></i> Add to Cart
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg> Add to Cart
               </button>
               <button type="button" class="pd-btn-buy" onclick="showLoginPrompt()">
-                <i class="fas fa-bolt"></i> Buy Now
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-bolt"></use></svg> Buy Now
               </button>
               {% endif %}
             </div>
@@ -389,20 +389,20 @@
           {% else %}
           <div class="pd-actions">
             <button class="pd-btn-disabled" disabled>
-              <i class="fas fa-times-circle me-2"></i> Out of Stock
+              <svg class="icon me-2" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times-circle"></use></svg> Out of Stock
             </button>
             <a href="{% url 'contact' %}" class="pd-btn-buy">
-              <i class="fas fa-bell"></i> Notify When Available
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-bell"></use></svg> Notify When Available
             </a>
           </div>
           {% endif %}
 
           <!-- Features Grid -->
           <div class="pd-features">
-            <div class="pd-feature"><i class="fas fa-shield-alt"></i> Secure Checkout</div>
-            <div class="pd-feature"><i class="fas fa-truck"></i> Pan India Delivery</div>
-            <div class="pd-feature"><i class="fas fa-gift"></i> Gift Packaging</div>
-            <div class="pd-feature"><i class="fas fa-headset"></i> 24/7 Support</div>
+            <div class="pd-feature"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shield-alt"></use></svg> Secure Checkout</div>
+            <div class="pd-feature"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-truck"></use></svg> Pan India Delivery</div>
+            <div class="pd-feature"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg> Gift Packaging</div>
+            <div class="pd-feature"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-headset"></use></svg> 24/7 Support</div>
           </div>
 
           <!-- Share & Extras -->
@@ -410,10 +410,10 @@
             <span style="font-size:12.5px;color:#a07060;margin-right:4px;">Share:</span>
             <a href="https://wa.me/?text={{ product.name }} - ₹{{ product.offer_price|default:product.price }} | {{ request.build_absolute_uri }}"
               target="_blank" class="pd-share-btn">
-              <i class="fab fa-whatsapp" style="color:#25D366;"></i> WhatsApp
+              <svg class="icon" aria-hidden="true" style="color:#25D366;"><use href="{% static 'icons/sprite.svg' %}#i-whatsapp"></use></svg> WhatsApp
             </a>
             <a href="#" class="pd-share-btn" onclick="copyLink()">
-              <i class="fas fa-link"></i> Copy Link
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-link"></use></svg> Copy Link
             </a>
           </div>
 
@@ -444,17 +444,17 @@
             {% if rp.image %}
             <img src="{{ rp.image.url }}" alt="{{ rp.name }}" class="product-img">
             {% else %}
-            <div class="product-img-placeholder"><i class="fas fa-gift"></i></div>
+            <div class="product-img-placeholder"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg></div>
             {% endif %}
             <div class="product-overlay">
               <a href="{% url 'product_detail' rp.slug %}" class="overlay-btn">
-                <i class="fas fa-eye me-1"></i> View
+                <svg class="icon me-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-eye"></use></svg> View
               </a>
               <form action="{% url 'add_to_cart' rp.id %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="quantity" value="1">
                 <button type="submit" class="overlay-btn">
-                  <i class="fas fa-bag-shopping me-1"></i> Add to Cart
+                  <svg class="icon me-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-bag-shopping"></use></svg> Add to Cart
                 </button>
               </form>
             </div>
@@ -502,16 +502,16 @@
         <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a07060;margin-bottom:10px;">Why sign in?</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
-            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Track your orders in real time
+            <svg class="icon" aria-hidden="true" style="color:#22c55e;font-size:13px;width:16px;"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg> Track your orders in real time
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
-            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Faster checkout experience
+            <svg class="icon" aria-hidden="true" style="color:#22c55e;font-size:13px;width:16px;"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg> Faster checkout experience
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
-            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Secure payment & order history
+            <svg class="icon" aria-hidden="true" style="color:#22c55e;font-size:13px;width:16px;"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg> Secure payment & order history
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6b3a2a;">
-            <i class="fas fa-check-circle" style="color:#22c55e;font-size:13px;width:16px;"></i> Exclusive offers for members
+            <svg class="icon" aria-hidden="true" style="color:#22c55e;font-size:13px;width:16px;"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg> Exclusive offers for members
           </div>
         </div>
       </div>
@@ -519,18 +519,18 @@
       <!-- Buttons -->
       <div style="display:flex;flex-direction:column;gap:10px;">
         <a href="{% url 'login' %}?next={{ request.path }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:linear-gradient(135deg,#c0392b,#2e1212);color:white;border:none;border-radius:50px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(192,57,43,0.35);transition:all 0.3s;">
-          <i class="fas fa-sign-in-alt"></i> Sign In to My Account
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-sign-in-alt"></use></svg> Sign In to My Account
         </a>
         <a href="{% url 'register' %}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:transparent;color:#c0392b;border:2px solid #c0392b;border-radius:50px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.3s;">
-          <i class="fas fa-user-plus"></i> Create New Account
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-user-plus"></use></svg> Create New Account
         </a>
         <button onclick="closeLoginModal()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:transparent;color:#a07060;border:1.5px solid #eeddd0;border-radius:50px;font-family:inherit;font-size:13.5px;cursor:pointer;transition:all 0.2s;">
-          <i class="fas fa-times"></i> Continue Browsing
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times"></use></svg> Continue Browsing
         </button>
       </div>
 
       <p style="text-align:center;font-size:12px;color:#a07060;margin-top:16px;margin-bottom:0;">
-        <i class="fas fa-lock" style="color:#c0392b;margin-right:4px;"></i>
+        <svg class="icon" aria-hidden="true" style="color:#c0392b;margin-right:4px;"><use href="{% static 'icons/sprite.svg' %}#i-lock"></use></svg>
         Your information is safe and encrypted
       </p>
     </div>
@@ -576,7 +576,7 @@ function copyLink() {
   navigator.clipboard.writeText(window.location.href).then(function() {
     const btn = event.target.closest('.pd-share-btn');
     const orig = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    btn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-check"></use></svg> Copied!';
     btn.style.borderColor = '#22c55e';
     btn.style.color = '#22c55e';
     setTimeout(() => { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);

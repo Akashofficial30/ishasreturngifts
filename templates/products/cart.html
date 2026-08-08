@@ -58,7 +58,7 @@
 <!-- Welcome bar -->
 {% if user.is_authenticated %}
 <div style="background:linear-gradient(135deg,#1c0909,#2e1212);padding:10px 0;text-align:center;font-size:13px;color:rgba(255,255,255,0.75);">
-  <i class="fas fa-shopping-bag" style="color:#f0c96a;margin-right:6px;"></i>
+  <svg class="icon" aria-hidden="true" style="color:#f0c96a;margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg>
   Welcome, <strong style="color:#f0c96a;">{{ user.first_name|default:user.username }}</strong>! Review your cart below.
 </div>
 {% endif %}
@@ -76,7 +76,7 @@
             Your <em style="color:#c0392b;font-style:italic;">Cart</em>
           </h1>
           <a href="{% url 'product_list' %}" style="font-size:13.5px;color:#c0392b;text-decoration:none;display:flex;align-items:center;gap:5px;">
-            <i class="fas fa-arrow-left"></i> Continue Shopping
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-left"></use></svg> Continue Shopping
           </a>
         </div>
 
@@ -96,7 +96,7 @@
               {% if item.product.image %}
               <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-img">
               {% else %}
-              <div class="cart-img-ph"><i class="fas fa-gift"></i></div>
+              <div class="cart-img-ph"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg></div>
               {% endif %}
               <div>
                 <div class="cart-prod-name">
@@ -104,7 +104,7 @@
                 </div>
                 <div class="cart-prod-cat">{{ item.product.category.name }}</div>
                 {% if item.product.stock_quantity < 10 %}
-                <div style="font-size:11px;color:#f97316;margin-top:2px;"><i class="fas fa-exclamation-triangle"></i> Only {{ item.product.stock_quantity }} left!</div>
+                <div style="font-size:11px;color:#f97316;margin-top:2px;"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-exclamation-triangle"></use></svg> Only {{ item.product.stock_quantity }} left!</div>
                 {% endif %}
               </div>
             </div>
@@ -115,9 +115,9 @@
               <form action="{% url 'update_cart' item.id %}" method="POST" class="qty-form">
                 {% csrf_token %}
                 <div class="cart-qty-wrap">
-                  <button type="button" class="cart-qty-btn" onclick="qtyChange(this,-1)"><i class="fas fa-minus"></i></button>
+                  <button type="button" class="cart-qty-btn" onclick="qtyChange(this,-1)"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-minus"></use></svg></button>
                   <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}" class="cart-qty-inp" onchange="this.closest('form').submit()">
-                  <button type="button" class="cart-qty-btn" onclick="qtyChange(this,1)"><i class="fas fa-plus"></i></button>
+                  <button type="button" class="cart-qty-btn" onclick="qtyChange(this,1)"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg></button>
                 </div>
               </form>
             </div>
@@ -126,7 +126,7 @@
             <!-- Remove -->
             <div>
               <a href="{% url 'remove_from_cart' item.id %}" class="cart-remove" title="Remove">
-                <i class="fas fa-trash-alt"></i>
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-trash-alt"></use></svg>
               </a>
             </div>
           </div>
@@ -158,18 +158,18 @@
 
           {% if cart.get_total < 999 %}
           <div class="free-ship">
-            <i class="fas fa-truck"></i>
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-truck"></use></svg>
             Add ₹{{ 999|add:"-"|add:cart.get_total }} more for FREE shipping!
           </div>
           {% else %}
-          <div class="free-ship"><i class="fas fa-check-circle"></i> You qualify for FREE shipping!</div>
+          <div class="free-ship"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg> You qualify for FREE shipping!</div>
           {% endif %}
 
           <!-- ── CHECKOUT BUTTON — LOGIN CHECK ── -->
           {% if user.is_authenticated %}
           <!-- Logged in: go straight to checkout -->
           <a href="{% url 'checkout' %}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;background:linear-gradient(135deg,#c0392b,#2e1212);color:white;border:none;border-radius:50px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;margin-top:20px;box-shadow:0 4px 18px rgba(192,57,43,0.3);transition:all 0.3s;">
-            <i class="fas fa-lock"></i> Proceed to Checkout
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-lock"></use></svg> Proceed to Checkout
           </a>
           {% else %}
           <!-- NOT logged in: show login required box -->
@@ -178,16 +178,16 @@
             <div class="lrb-title">Sign In to Checkout</div>
             <div class="lrb-sub">You need to sign in to place an order. It's quick and free!</div>
             <a href="{% url 'login' %}?next={% url 'checkout' %}" class="lrb-btn">
-              <i class="fas fa-sign-in-alt"></i> Sign In to Continue
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-sign-in-alt"></use></svg> Sign In to Continue
             </a>
             <a href="{% url 'register' %}" class="lrb-btn2">
-              <i class="fas fa-user-plus"></i> Create Account
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-user-plus"></use></svg> Create Account
             </a>
           </div>
           {% endif %}
 
           <div style="text-align:center;font-size:12px;color:#a07060;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:5px;">
-            <i class="fas fa-shield-alt" style="color:#c9972a;"></i> Secure Checkout with Razorpay
+            <svg class="icon" aria-hidden="true" style="color:#c9972a;"><use href="{% static 'icons/sprite.svg' %}#i-shield-alt"></use></svg> Secure Checkout with Razorpay
           </div>
         </div>
       </div>
@@ -197,11 +197,11 @@
     {% else %}
     <!-- EMPTY CART -->
     <div class="cart-empty">
-      <span class="cart-empty-icon"><i class="fas fa-shopping-bag"></i></span>
+      <span class="cart-empty-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg></span>
       <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#22100a;margin-bottom:10px;">Your cart is empty</h2>
       <p style="color:#a07060;font-size:15px;margin-bottom:28px;">Looks like you haven't added any gifts yet. Start exploring our collection!</p>
       <a href="{% url 'product_list' %}" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#c0392b,#2e1212);color:white;padding:14px 32px;border-radius:50px;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 4px 18px rgba(192,57,43,0.3);">
-        <i class="fas fa-gift"></i> Browse Return Gifts
+        <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg> Browse Return Gifts
       </a>
     </div>
     {% endif %}
@@ -221,15 +221,15 @@
     </div>
     <div style="padding:28px;">
       <div style="background:#fdf6e9;border:1px solid rgba(201,151,42,0.3);border-radius:10px;padding:13px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px;">
-        <i class="fas fa-info-circle" style="color:#c9972a;margin-top:2px;"></i>
+        <svg class="icon" aria-hidden="true" style="color:#c9972a;margin-top:2px;"><use href="{% static 'icons/sprite.svg' %}#i-info-circle"></use></svg>
         <span style="font-size:13px;color:#6b3a2a;line-height:1.6;">Your cart items are saved. Sign in to complete your order securely.</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <a href="{% url 'login' %}?next={% url 'checkout' %}" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:linear-gradient(135deg,#c0392b,#2e1212);color:white;border-radius:50px;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 4px 16px rgba(192,57,43,0.3);">
-          <i class="fas fa-sign-in-alt"></i> Sign In & Checkout
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-sign-in-alt"></use></svg> Sign In & Checkout
         </a>
         <a href="{% url 'register' %}" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;border:2px solid #c0392b;color:#c0392b;border-radius:50px;font-weight:700;font-size:13.5px;text-decoration:none;">
-          <i class="fas fa-user-plus"></i> Create Account
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-user-plus"></use></svg> Create Account
         </a>
         <button onclick="closeCartModal()" style="padding:11px;background:none;border:1.5px solid #eeddd0;border-radius:50px;color:#a07060;font-family:inherit;font-size:13px;cursor:pointer;">
           Continue Browsing

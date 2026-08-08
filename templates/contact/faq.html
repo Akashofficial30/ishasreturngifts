@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}FAQ – Isha's Return Gifts{% endblock %}
 {% block content %}
 <div style="background:linear-gradient(135deg,#1c0909,#2e1212);padding:60px 0;text-align:center;">
@@ -15,14 +16,14 @@
         <div style="background:#fff;border:1.5px solid #eeddd0;border-radius:12px;margin-bottom:10px;overflow:hidden;" class="faq-i" onclick="this.classList.toggle('open')">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-weight:600;font-size:14.5px;color:#22100a;">
             <span>{{ q }}</span>
-            <div style="width:28px;height:28px;border-radius:50%;background:#fdf0ee;display:flex;align-items:center;justify-content:center;color:#c0392b;font-size:12px;flex-shrink:0;transition:all .3s;" class="fq-icon"><i class="fas fa-plus"></i></div>
+            <div style="width:28px;height:28px;border-radius:50%;background:#fdf0ee;display:flex;align-items:center;justify-content:center;color:#c0392b;font-size:12px;flex-shrink:0;transition:all .3s;" class="fq-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg></div>
           </div>
           <div style="padding:0 22px;max-height:0;overflow:hidden;font-size:14px;color:#6b3a2a;line-height:1.75;transition:all .35s;" class="fa-ans">{{ a }}</div>
         </div>
         {% endfor %}
         <div style="text-align:center;margin-top:40px;">
           <p style="color:#a07060;margin-bottom:16px;">Still have questions?</p>
-          <a href="{% url 'contact' %}" class="btn-primary-gold">Contact Us <i class="fas fa-arrow-right ms-2"></i></a>
+          <a href="{% url 'contact' %}" class="btn-primary-gold">Contact Us <svg class="icon ms-2" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-right"></use></svg></a>
         </div>
       </div>
     </div>

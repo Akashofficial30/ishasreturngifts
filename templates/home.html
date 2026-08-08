@@ -16,7 +16,7 @@
       </h1>
       <p class="hero-subtitle">Thoughtfully curated return gifts for weddings, baby showers, housewarmings & all your special moments across India.</p>
       <div class="hero-actions">
-        <a href="{% url 'product_list' %}" class="btn-primary-gold">Shop Now <i class="fas fa-arrow-right ms-1"></i></a>
+        <a href="{% url 'product_list' %}" class="btn-primary-gold">Shop Now <svg class="icon ms-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-right"></use></svg></a>
         <a href="#categories" class="btn-outline-gold">Browse Categories</a>
       </div>
       <div class="hero-stats">
@@ -49,25 +49,25 @@
     <div class="row g-3">
       <div class="col-6 col-md-3">
         <div class="trust-item">
-          <i class="fas fa-shipping-fast"></i>
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shipping-fast"></use></svg>
           <div><strong>Free Shipping</strong><span>Orders above ₹999</span></div>
         </div>
       </div>
       <div class="col-6 col-md-3">
         <div class="trust-item">
-          <i class="fas fa-shield-alt"></i>
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shield-alt"></use></svg>
           <div><strong>Secure Payment</strong><span>100% Safe Checkout</span></div>
         </div>
       </div>
       <div class="col-6 col-md-3">
         <div class="trust-item">
-          <i class="fas fa-gift"></i>
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg>
           <div><strong>Gift Wrapping</strong><span>Complimentary</span></div>
         </div>
       </div>
       <div class="col-6 col-md-3">
         <div class="trust-item">
-          <i class="fas fa-headset"></i>
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-headset"></use></svg>
           <div><strong>24/7 Support</strong><span>Always Here for You</span></div>
         </div>
       </div>
@@ -92,12 +92,12 @@
           <div class="product-img-wrap">
             {% if product.discount_percentage > 0 %}<span class="badge-discount">-{{ product.discount_percentage }}%</span>{% endif %}
             {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
-            {% else %}<div class="product-img-placeholder"><i class="fas fa-gift"></i></div>{% endif %}
+            {% else %}<div class="product-img-placeholder"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg></div>{% endif %}
             <div class="product-overlay">
-              <a href="{% url 'product_detail' product.slug %}" class="overlay-btn"><i class="fas fa-eye me-1"></i> View</a>
+              <a href="{% url 'product_detail' product.slug %}" class="overlay-btn"><svg class="icon me-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-eye"></use></svg> View</a>
               <form action="{% url 'add_to_cart' product.id %}" method="POST">
                 {% csrf_token %}<input type="hidden" name="quantity" value="1">
-                <button type="submit" class="overlay-btn"><i class="fas fa-bag-shopping me-1"></i> Add to Cart</button>
+                <button type="submit" class="overlay-btn"><svg class="icon me-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-bag-shopping"></use></svg> Add to Cart</button>
               </form>
             </div>
           </div>
@@ -116,7 +116,7 @@
       {% endfor %}
     </div>
     <div class="text-center mt-5">
-      <a href="{% url 'product_list' %}" class="btn-primary-gold">View All Products <i class="fas fa-arrow-right ms-1"></i></a>
+      <a href="{% url 'product_list' %}" class="btn-primary-gold">View All Products <svg class="icon ms-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-right"></use></svg></a>
     </div>
   </div>
 </section>
@@ -137,7 +137,7 @@
         <a href="{% url 'product_list' %}?category={{ category.slug }}" class="category-card">
           <div class="category-icon">
             {% if category.image %}<img src="{{ category.image.url }}" alt="{{ category.name }}">
-            {% else %}<i class="fas fa-gift"></i>{% endif %}
+            {% else %}<svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg>{% endif %}
           </div>
           <h4 class="category-name">{{ category.name }}</h4>
           <span class="category-count">{{ category.product_count }} gifts</span>
@@ -157,7 +157,7 @@
         <h3>Bulk Orders for Weddings?</h3>
         <p>Special discounts on orders of 50+ pieces. Custom packaging available. Pan India delivery.</p>
       </div>
-      <a href="{% url 'product_list' %}" class="btn-primary-gold">Shop Now <i class="fas fa-arrow-right ms-1"></i></a>
+      <a href="{% url 'product_list' %}" class="btn-primary-gold">Shop Now <svg class="icon ms-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-right"></use></svg></a>
     </div>
   </div>
 </section>
@@ -178,7 +178,7 @@
           <div class="product-img-wrap">
             {% if product.discount_percentage > 0 %}<span class="badge-discount">-{{ product.discount_percentage }}%</span>{% endif %}
             {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
-            {% else %}<div class="product-img-placeholder"><i class="fas fa-gift"></i></div>{% endif %}
+            {% else %}<div class="product-img-placeholder"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg></div>{% endif %}
             <div class="product-overlay">
               <a href="{% url 'product_detail' product.slug %}" class="overlay-btn">Quick View</a>
               <form action="{% url 'add_to_cart' product.id %}" method="POST">
@@ -220,7 +220,7 @@
         <div class="testimonial-card">
           <div class="testimonial-stars">
             {% for i in "12345" %}
-            <i class="fas fa-star {% if forloop.counter <= t.rating %}active{% endif %}"></i>
+            <svg class="icon {% if forloop.counter <= t.rating %}active{% endif %}" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg>
             {% endfor %}
           </div>
           <p class="testimonial-text">"{{ t.message }}"</p>
@@ -252,28 +252,28 @@
     <div class="row g-4">
       <div class="col-md-6 col-lg-3">
         <div class="why-card">
-          <div class="why-icon"><i class="fas fa-award"></i></div>
+          <div class="why-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-award"></use></svg></div>
           <h4>Premium Quality</h4>
           <p>Every product is handpicked for quality and craftsmanship that will delight your guests.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
         <div class="why-card">
-          <div class="why-icon"><i class="fas fa-boxes"></i></div>
+          <div class="why-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-boxes"></use></svg></div>
           <h4>Bulk Orders</h4>
           <p>Handle large wedding orders with ease. Custom packaging for every order size.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
         <div class="why-card">
-          <div class="why-icon"><i class="fas fa-palette"></i></div>
+          <div class="why-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-palette"></use></svg></div>
           <h4>Customization</h4>
           <p>Personalize with names, dates & messages for that extra special touch.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
         <div class="why-card">
-          <div class="why-icon"><i class="fas fa-truck"></i></div>
+          <div class="why-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-truck"></use></svg></div>
           <h4>Timely Delivery</h4>
           <p>We understand event dates. Count on us for on-time delivery, every time.</p>
         </div>

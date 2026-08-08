@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Payment Failed – Isha Return Gifts{% endblock %}
 
@@ -9,7 +10,7 @@
             <div class="col-lg-6">
                 <div class="confirmation-card text-center">
                     <div class="fail-icon">
-                        <i class="fas fa-times-circle"></i>
+                        <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times-circle"></use></svg>
                     </div>
                     <h2>Payment Failed</h2>
                     <p class="text-muted">We couldn't process your payment. Your cart items are still saved.</p>

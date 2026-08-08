@@ -6,18 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}Isha's Return Gifts – Premium Wedding Return Gifts{% endblock %}</title>
 
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<!-- Bootstrap -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<!-- ALL CSS in one file -->
+<!-- No external stylesheets, fonts or scripts: everything below is served from
+     this origin, so the page has no third-party requests to block on. -->
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="{% static 'css/all.css' %}">
 
 {% block extra_css %}{% endblock %}
@@ -28,14 +19,14 @@
 <div class="irg-topbar">
   <div class="irg-topbar-inner">
     <div class="irg-topbar-left">
-      <span><i class="fas fa-phone-alt"></i>+91 98765 43210</span>
+      <span><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-phone-alt"></use></svg>+91 98765 43210</span>
       <span class="irg-top-divider d-none d-md-inline">|</span>
-      <span class="d-none d-md-inline"><i class="fas fa-envelope"></i>hello@ishareturnGifts.com</span>
+      <span class="d-none d-md-inline"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg>hello@ishareturnGifts.com</span>
     </div>
     <div class="irg-topbar-right d-none d-md-flex">
-      <span><i class="fas fa-truck"></i>Free shipping above ₹999</span>
+      <span><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-truck"></use></svg>Free shipping above ₹999</span>
       <span class="irg-top-divider">|</span>
-      <span><i class="fas fa-map-marker-alt"></i>Pan India Delivery</span>
+      <span><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-map-marker-alt"></use></svg>Pan India Delivery</span>
     </div>
   </div>
 </div>
@@ -55,13 +46,13 @@
       <li><a href="{% url 'home' %}" class="irg-nav-link">Home</a></li>
       <li><a href="{% url 'product_list' %}" class="irg-nav-link">All Products</a></li>
       <li>
-        <a href="#" class="irg-nav-link">Categories <i class="fas fa-chevron-down irg-nav-arrow"></i></a>
+        <a href="#" class="irg-nav-link">Categories <svg class="icon irg-nav-arrow" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-down"></use></svg></a>
         <div class="irg-dropdown">
-          <a href="{% url 'product_list' %}"><i class="fas fa-th"></i> All Gifts</a>
-          <a href="{% url 'product_list' %}?category=wedding-return-gifts"><i class="fas fa-heart"></i> Wedding Gifts</a>
-          <a href="{% url 'product_list' %}?category=pooja-items"><i class="fas fa-om"></i> Pooja Items</a>
-          <a href="{% url 'product_list' %}?category=home-decor"><i class="fas fa-home"></i> Home Décor</a>
-          <a href="{% url 'product_list' %}?category=customized-gifts"><i class="fas fa-star"></i> Customized</a>
+          <a href="{% url 'product_list' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-th"></use></svg> All Gifts</a>
+          <a href="{% url 'product_list' %}?category=wedding-return-gifts"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-heart"></use></svg> Wedding Gifts</a>
+          <a href="{% url 'product_list' %}?category=pooja-items"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-om"></use></svg> Pooja Items</a>
+          <a href="{% url 'product_list' %}?category=home-decor"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-home"></use></svg> Home Décor</a>
+          <a href="{% url 'product_list' %}?category=customized-gifts"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg> Customized</a>
         </div>
       </li>
       <li><a href="{% url 'product_list' %}?featured=true" class="irg-nav-link">Wedding Gifts</a></li>
@@ -71,14 +62,14 @@
     <div class="irg-actions">
       <form action="{% url 'product_list' %}" method="GET">
         <div class="irg-search-wrap" id="irgSearchWrap">
-          <button type="button" class="irg-search-icon-btn" onclick="irgToggleSearch()"><i class="fas fa-search"></i></button>
+          <button type="button" class="irg-search-icon-btn" onclick="irgToggleSearch()"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-search"></use></svg></button>
           <input type="text" name="search" placeholder="Search gifts…" class="irg-search-input" id="irgSearchInput">
-          <button type="submit" class="irg-search-submit"><i class="fas fa-arrow-right"></i></button>
+          <button type="submit" class="irg-search-submit"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-right"></use></svg></button>
         </div>
       </form>
 
       <a href="{% url 'cart' %}" class="irg-cart">
-        <i class="fas fa-shopping-bag"></i>
+        <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg>
         {% if cart_count > 0 %}<span class="irg-cart-count">{{ cart_count }}</span>{% endif %}
       </a>
 
@@ -99,11 +90,11 @@
             </div>
           </li>
           <li><hr class="dropdown-divider my-1"></li>
-          <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2 text-danger"></i>Logout</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}"><svg class="icon me-2 text-danger" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-sign-out-alt"></use></svg>Logout</a></li>
         </ul>
       </div>
       {% else %}
-      <a href="{% url 'login' %}" class="irg-login-btn"><i class="fas fa-user"></i><span>Login</span></a>
+      <a href="{% url 'login' %}" class="irg-login-btn"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-user"></use></svg><span>Login</span></a>
       {% endif %}
 
       <button class="irg-hamburger d-lg-none" id="irgHamburger" onclick="irgToggleMobile()">
@@ -116,17 +107,17 @@
     <div class="irg-mobile-inner">
       <form action="{% url 'product_list' %}" method="GET" class="irg-mobile-search">
         <input type="text" name="search" placeholder="Search gifts…">
-        <button type="submit"><i class="fas fa-search"></i></button>
+        <button type="submit"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-search"></use></svg></button>
       </form>
       <nav class="irg-mobile-nav">
-        <a href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a>
-        <a href="{% url 'product_list' %}"><i class="fas fa-gift"></i>All Products</a>
-        <a href="{% url 'product_list' %}?featured=true"><i class="fas fa-heart"></i>Wedding Gifts</a>
-        <a href="{% url 'cart' %}"><i class="fas fa-shopping-bag"></i>Cart{% if cart_count > 0 %}<span class="irg-mob-badge">{{ cart_count }}</span>{% endif %}</a>
+        <a href="{% url 'home' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-home"></use></svg>Home</a>
+        <a href="{% url 'product_list' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg>All Products</a>
+        <a href="{% url 'product_list' %}?featured=true"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-heart"></use></svg>Wedding Gifts</a>
+        <a href="{% url 'cart' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg>Cart{% if cart_count > 0 %}<span class="irg-mob-badge">{{ cart_count }}</span>{% endif %}</a>
         {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}" class="irg-mob-logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        <a href="{% url 'logout' %}" class="irg-mob-logout"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-sign-out-alt"></use></svg>Logout</a>
         {% else %}
-        <a href="{% url 'login' %}" class="irg-mob-login"><i class="fas fa-user"></i>Login</a>
+        <a href="{% url 'login' %}" class="irg-mob-login"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-user"></use></svg>Login</a>
         {% endif %}
       </nav>
     </div>
@@ -156,7 +147,7 @@
         <p>500+ premium return gifts · Free shipping above ₹999 · Pan India delivery</p>
       </div>
       <div class="irg-footer-band-btns">
-        <a href="{% url 'product_list' %}" class="irg-footer-cta">Shop Now <i class="fas fa-arrow-right ms-2"></i></a>
+        <a href="{% url 'product_list' %}" class="irg-footer-cta">Shop Now <svg class="icon ms-2" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-right"></use></svg></a>
         <a href="#" class="irg-footer-cta2">Bulk Orders</a>
       </div>
     </div>
@@ -174,43 +165,43 @@
         </div>
         <p class="irg-footer-about">Curating beautiful, meaningful return gifts for weddings, baby showers, housewarmings & all your special moments across India.</p>
         <div class="irg-footer-social">
-          <a href="#" class="irg-social-link"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="irg-social-link"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="irg-social-link"><i class="fab fa-pinterest-p"></i></a>
-          <a href="#" class="irg-social-link"><i class="fab fa-whatsapp"></i></a>
-          <a href="#" class="irg-social-link"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="irg-social-link"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-instagram"></use></svg></a>
+          <a href="#" class="irg-social-link"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-facebook-f"></use></svg></a>
+          <a href="#" class="irg-social-link"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-pinterest-p"></use></svg></a>
+          <a href="#" class="irg-social-link"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-whatsapp"></use></svg></a>
+          <a href="#" class="irg-social-link"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-youtube"></use></svg></a>
         </div>
       </div>
 
       <div>
         <h5 class="irg-footer-col-title">Quick Links</h5>
         <ul class="irg-footer-links">
-          <li><a href="{% url 'home' %}"><i class="fas fa-chevron-right"></i>Home</a></li>
-          <li><a href="{% url 'product_list' %}"><i class="fas fa-chevron-right"></i>All Products</a></li>
-          <li><a href="{% url 'cart' %}"><i class="fas fa-chevron-right"></i>Shopping Cart</a></li>
-          <li><a href="{% url 'dashboard_home' %}"><i class="fas fa-chevron-right"></i>Admin Panel</a></li>
-          <li><a href="#"><i class="fas fa-chevron-right"></i>About Us</a></li>
+          <li><a href="{% url 'home' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Home</a></li>
+          <li><a href="{% url 'product_list' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>All Products</a></li>
+          <li><a href="{% url 'cart' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Shopping Cart</a></li>
+          <li><a href="{% url 'dashboard_home' %}"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Admin Panel</a></li>
+          <li><a href="#"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>About Us</a></li>
         </ul>
       </div>
 
       <div>
         <h5 class="irg-footer-col-title">Categories</h5>
         <ul class="irg-footer-links">
-          <li><a href="{% url 'product_list' %}?category=wedding-return-gifts"><i class="fas fa-chevron-right"></i>Wedding Gifts</a></li>
-          <li><a href="{% url 'product_list' %}?category=pooja-items"><i class="fas fa-chevron-right"></i>Pooja Items</a></li>
-          <li><a href="{% url 'product_list' %}?category=home-decor"><i class="fas fa-chevron-right"></i>Home Décor</a></li>
-          <li><a href="{% url 'product_list' %}?category=kitchen-essentials"><i class="fas fa-chevron-right"></i>Kitchen Essentials</a></li>
-          <li><a href="{% url 'product_list' %}?category=customized-gifts"><i class="fas fa-chevron-right"></i>Customized Gifts</a></li>
+          <li><a href="{% url 'product_list' %}?category=wedding-return-gifts"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Wedding Gifts</a></li>
+          <li><a href="{% url 'product_list' %}?category=pooja-items"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Pooja Items</a></li>
+          <li><a href="{% url 'product_list' %}?category=home-decor"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Home Décor</a></li>
+          <li><a href="{% url 'product_list' %}?category=kitchen-essentials"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Kitchen Essentials</a></li>
+          <li><a href="{% url 'product_list' %}?category=customized-gifts"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chevron-right"></use></svg>Customized Gifts</a></li>
         </ul>
       </div>
 
       <div>
         <h5 class="irg-footer-col-title">Get in Touch</h5>
         <ul class="irg-footer-contact">
-          <li><div class="irg-contact-icon"><i class="fas fa-map-marker-alt"></i></div><div class="irg-contact-text">123, Gandhi Nagar, Chennai – 600001, Tamil Nadu</div></li>
-          <li><div class="irg-contact-icon"><i class="fas fa-phone-alt"></i></div><div class="irg-contact-text">+91 98765 43210</div></li>
-          <li><div class="irg-contact-icon"><i class="fas fa-envelope"></i></div><div class="irg-contact-text">hello@ishareturnGifts.com</div></li>
-          <li><div class="irg-contact-icon"><i class="fas fa-clock"></i></div><div class="irg-contact-text">Mon – Sat: 9:00 AM – 7:00 PM</div></li>
+          <li><div class="irg-contact-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-map-marker-alt"></use></svg></div><div class="irg-contact-text">123, Gandhi Nagar, Chennai – 600001, Tamil Nadu</div></li>
+          <li><div class="irg-contact-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-phone-alt"></use></svg></div><div class="irg-contact-text">+91 98765 43210</div></li>
+          <li><div class="irg-contact-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg></div><div class="irg-contact-text">hello@ishareturnGifts.com</div></li>
+          <li><div class="irg-contact-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-clock"></use></svg></div><div class="irg-contact-text">Mon – Sat: 9:00 AM – 7:00 PM</div></li>
         </ul>
         <span class="irg-pay-label">We Accept</span>
         <div class="irg-pay-icons">
@@ -231,18 +222,42 @@
         <a href="#">Terms of Service</a><span>·</span>
         <a href="#">Refund Policy</a>
       </div>
-      <p>Made with <i class="fas fa-heart" style="color:#c0392b;"></i> in Chennai</p>
+      <p>Made with <svg class="icon" aria-hidden="true" style="color:#c0392b;"><use href="{% static 'icons/sprite.svg' %}#i-heart"></use></svg> in Chennai</p>
     </div>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 window.addEventListener('scroll',function(){var h=document.getElementById('irgHeader');if(h)h.classList.toggle('scrolled',window.scrollY>40);},{passive:true});
 function irgToggleSearch(){var w=document.getElementById('irgSearchWrap'),i=document.getElementById('irgSearchInput');if(!w)return;w.classList.toggle('open');if(w.classList.contains('open')&&i)setTimeout(function(){i.focus();},60);}
 document.addEventListener('click',function(e){var w=document.getElementById('irgSearchWrap');if(w&&!w.contains(e.target))w.classList.remove('open');});
 function irgToggleMobile(){var m=document.getElementById('irgMobileMenu'),b=document.getElementById('irgHamburger');if(m)m.classList.toggle('open');if(b)b.classList.toggle('open');}
-setTimeout(function(){document.querySelectorAll('.alert').forEach(function(el){try{bootstrap.Alert.getOrCreateInstance(el).close();}catch(e){}});},4500);
+
+// Dropdown — replaces bootstrap.Dropdown. Toggles .show on the sibling menu.
+document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.preventDefault(); e.stopPropagation();
+    var menu=btn.parentElement.querySelector('.dropdown-menu');
+    if(!menu)return;
+    var wasOpen=menu.classList.contains('show');
+    document.querySelectorAll('.dropdown-menu.show').forEach(function(m){m.classList.remove('show');});
+    if(!wasOpen)menu.classList.add('show');
+    btn.setAttribute('aria-expanded',!wasOpen);
+  });
+});
+document.addEventListener('click',function(){
+  document.querySelectorAll('.dropdown-menu.show').forEach(function(m){m.classList.remove('show');});
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')document.querySelectorAll('.dropdown-menu.show').forEach(function(m){m.classList.remove('show');});
+});
+
+// Alerts — replaces bootstrap.Alert. Manual close, then auto-dismiss.
+function irgCloseAlert(el){el.classList.remove('show');setTimeout(function(){el.remove();},200);}
+document.querySelectorAll('.alert .btn-close').forEach(function(b){
+  b.addEventListener('click',function(){irgCloseAlert(b.closest('.alert'));});
+});
+setTimeout(function(){document.querySelectorAll('.alert').forEach(irgCloseAlert);},4500);
 
 // Scroll animations
 var io=new IntersectionObserver(function(entries){entries.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('visible');},i*65);io.unobserve(e.target);}});},{threshold:0.1});

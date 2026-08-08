@@ -11,7 +11,7 @@
                 <div class="confirmation-card text-center">
 
                     <div class="success-icon">
-                        <i class="fas fa-check-circle"></i>
+                        <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg>
                     </div>
 
                     <h2 class="confirmation-title">
@@ -106,7 +106,7 @@
                     <div class="delivery-info mt-4">
                         <h5>Delivery Address</h5>
                         <p>{{ order.address }}, {{ order.city }}, {{ order.state }} – {{ order.pincode }}</p>
-                        <p><i class="fas fa-phone-alt me-1"></i> {{ order.customer_phone }}</p>
+                        <p><svg class="icon me-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-phone-alt"></use></svg> {{ order.customer_phone }}</p>
                     </div>
 
                     <!-- Actions -->
@@ -118,10 +118,10 @@
                     <!-- Notification Note -->
                     <div class="confirmation-note mt-4">
                         {% if order.customer_email %}
-                        <i class="fas fa-envelope me-1"></i>
+                        <svg class="icon me-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg>
                         Order confirmation sent to <strong>{{ order.customer_email }}</strong>
                         {% else %}
-                        <i class="fas fa-info-circle me-1"></i>
+                        <svg class="icon me-1" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-info-circle"></use></svg>
                         Order confirmed! Our team will contact you at <strong>{{ order.customer_phone }}</strong>
                         {% endif %}
                     </div>

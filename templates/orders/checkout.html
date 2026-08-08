@@ -215,7 +215,7 @@
                                     <span style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">Mastercard</span>
                                 </div>
                                 <p style="font-size:12px;color:var(--text-muted);margin-top:10px;margin-bottom:0;">
-                                    <i class="fas fa-shield-alt" style="color:var(--gold);"></i>
+                                    <svg class="icon" aria-hidden="true" style="color:var(--gold);"><use href="{% static 'icons/sprite.svg' %}#i-shield-alt"></use></svg>
                                     Secured by Razorpay. Your payment info is 100% safe and encrypted.
                                 </p>
                             </div>
@@ -223,7 +223,7 @@
 
                         <!-- Submit Button (changes based on selection) -->
                         <button type="submit" class="btn-primary-gold btn-full mt-3" id="submitBtn" style="font-size:16px;padding:16px;">
-                            <span id="btnText"><i class="fas fa-lock me-2"></i> Proceed to Pay ₹{{ cart.get_total }}</span>
+                            <span id="btnText"><svg class="icon me-2" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-lock"></use></svg> Proceed to Pay ₹{{ cart.get_total }}</span>
                         </button>
 
                     </form>
@@ -241,7 +241,7 @@
                                 {% if item.product.image %}
                                 <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
                                 {% else %}
-                                <div class="cart-img-placeholder sm"><i class="fas fa-gift"></i></div>
+                                <div class="cart-img-placeholder sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg></div>
                                 {% endif %}
                                 <span class="order-item-qty">{{ item.quantity }}</span>
                             </div>
@@ -278,12 +278,12 @@
 
                     <!-- Payment method indicator -->
                     <div id="paymentMethodBadge" style="margin-top:16px;padding:12px 16px;border-radius:8px;background:#f0f4ff;border:1px solid #c7d7f5;text-align:center;">
-                        <i class="fas fa-lock" style="color:#1565c0;margin-right:6px;"></i>
+                        <svg class="icon" aria-hidden="true" style="color:#1565c0;margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-lock"></use></svg>
                         <span style="font-size:13px;color:#1565c0;font-weight:500;">Online Payment via Razorpay</span>
                     </div>
 
                     <div class="secure-badge mt-3">
-                        <i class="fas fa-shield-alt"></i> 100% Secure & Safe Checkout
+                        <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shield-alt"></use></svg> 100% Secure & Safe Checkout
                     </div>
                 </div>
             </div>
@@ -307,10 +307,10 @@ function selectPayment(method) {
         codOption.classList.add('selected');
         onlineOption.classList.remove('selected');
 
-        btnText.innerHTML = '<i class="fas fa-check-circle me-2"></i> Place Order (Cash on Delivery)';
+        btnText.innerHTML = '<svg class="icon me-2" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg> Place Order (Cash on Delivery)';
         badge.style.background = '#fff8e1';
         badge.style.borderColor = '#ffe082';
-        badge.innerHTML = '<i class="fas fa-truck" style="color:#f57f17;margin-right:6px;"></i><span style="font-size:13px;color:#f57f17;font-weight:500;">Cash on Delivery – Pay when order arrives</span>';
+        badge.innerHTML = '<svg class="icon" aria-hidden="true" style="color:#f57f17;margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-truck"></use></svg><span style="font-size:13px;color:#f57f17;font-weight:500;">Cash on Delivery – Pay when order arrives</span>';
         codFeeRow.style.display = 'flex';
 
     } else {
@@ -318,10 +318,10 @@ function selectPayment(method) {
         onlineOption.classList.add('selected');
         codOption.classList.remove('selected');
 
-        btnText.innerHTML = '<i class="fas fa-lock me-2"></i> Proceed to Pay ₹{{ cart.get_total }}';
+        btnText.innerHTML = '<svg class="icon me-2" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-lock"></use></svg> Proceed to Pay ₹{{ cart.get_total }}';
         badge.style.background = '#f0f4ff';
         badge.style.borderColor = '#c7d7f5';
-        badge.innerHTML = '<i class="fas fa-lock" style="color:#1565c0;margin-right:6px;"></i><span style="font-size:13px;color:#1565c0;font-weight:500;">Online Payment via Razorpay</span>';
+        badge.innerHTML = '<svg class="icon" aria-hidden="true" style="color:#1565c0;margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-lock"></use></svg><span style="font-size:13px;color:#1565c0;font-weight:500;">Online Payment via Razorpay</span>';
         codFeeRow.style.display = 'none';
     }
 }

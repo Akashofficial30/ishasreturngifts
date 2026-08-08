@@ -2,13 +2,11 @@
    ISHA'S RETURN GIFTS - Header & Footer CSS
    Separate file: header.css
 ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
-
 /* ── TOP BAR ── */
 .irg-topbar {
   background: #1c0909;
   padding: 9px 0;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
 }
 .irg-topbar-inner {
   max-width: 1240px;
@@ -40,7 +38,7 @@
   top: 0;
   z-index: 9999;
   transition: box-shadow 0.3s ease;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
 }
 .irg-header.scrolled {
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
@@ -72,7 +70,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
   color: #fff;
@@ -81,7 +79,7 @@
 }
 .irg-brand-text { line-height: 1.1; }
 .irg-brand-name {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 700;
   color: #1c0909;
@@ -211,7 +209,7 @@
   background: transparent;
   flex: 1;
   font-size: 13px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   color: #22100a;
   outline: none;
   width: 0;
@@ -331,7 +329,7 @@
   text-decoration: none;
   transition: all 0.2s ease;
   white-space: nowrap;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
 }
 .irg-login-btn:hover { background: #c0392b; color: #fff; transform: translateY(-1px); }
 
@@ -367,7 +365,7 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s ease;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
 }
 .irg-mobile-menu.open { max-height: 520px; }
 .irg-mobile-inner { padding: 14px 20px 18px; }
@@ -382,7 +380,7 @@
 .irg-mobile-search input {
   flex: 1; border: none; background: transparent;
   padding: 10px 14px; font-size: 13.5px;
-  font-family: 'DM Sans', sans-serif; outline: none; color: #22100a;
+  font-family: var(--font-body); outline: none; color: #22100a;
 }
 .irg-mobile-search button {
   background: #c0392b; border: none;
@@ -408,7 +406,7 @@
 /* ── FOOTER ── */
 .irg-footer {
   background: #1c0909;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
 }
 
 /* FOOTER CTA BAND */
@@ -435,7 +433,7 @@
   position: relative;
 }
 .irg-footer-band h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 1.8rem;
   font-weight: 700;
   color: #fff;
@@ -485,11 +483,11 @@
   width: 42px; height: 42px; border-radius: 10px;
   background: linear-gradient(135deg, #c0392b, #2e1212);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0;
 }
 .irg-footer-logo-name {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 1.05rem; font-weight: 700; color: #fff; display: block;
 }
 .irg-footer-logo-sub {

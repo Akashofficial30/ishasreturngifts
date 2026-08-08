@@ -81,8 +81,12 @@ def product_list(request):
     return render(request, 'products/product_list.html', {
         'products': products,
         'categories': categories,
+        # The template reads selected_category/search_query; the old names
+        # never matched, so the active filter and the search box were dead.
         'active_category': active_category,
+        'selected_category': category_slug,
         'search': search,
+        'search_query': search,
         'total_count': len(products),
     })
 
