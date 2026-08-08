@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from products.models import Product
 import uuid
@@ -26,6 +27,15 @@ class Order(models.Model):
     ]
 
     order_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    # Nullable because orders placed before this field existed have no user to
+    # attach, and SET_NULL so deleting a customer never destroys order history.
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='orders',
+    )
     customer_name = models.CharField(max_length=200)
     customer_email = models.EmailField(blank=True)
     customer_phone = models.CharField(max_length=15)

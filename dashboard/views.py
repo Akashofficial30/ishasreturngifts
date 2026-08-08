@@ -20,6 +20,27 @@ def is_admin(user):
     return user.is_authenticated and user.is_staff
 
 
+def parse_decimal(raw, default=None):
+    """Blank or malformed numeric input previously reached the model as a
+    string and blew up with InvalidOperation on save."""
+    from decimal import Decimal, InvalidOperation
+    if raw in (None, ''):
+        return default
+    try:
+        value = Decimal(str(raw).strip())
+    except (InvalidOperation, ValueError):
+        return default
+    return value if value >= 0 else default
+
+
+def parse_int(raw, default=0):
+    try:
+        value = int(str(raw).strip())
+    except (TypeError, ValueError):
+        return default
+    return max(0, value)
+
+
 def get_new_msg_count():
     try:
         from contact.models import ContactMessage
@@ -258,15 +279,34 @@ def product_add(request):
     categories = Category.objects.all()
     if request.method == 'POST':
         from django.utils.text import slugify
-        name = request.POST.get('name')
-        slug = slugify(name)
+        name = (request.POST.get('name') or '').strip()
+        price = parse_decimal(request.POST.get('price'))
+        category_id = request.POST.get('category')
+
+        errors = []
+        if not name:
+            errors.append('Product name is required.')
+        if price is None:
+            errors.append('Enter a valid price.')
+        if not category_id or not Category.objects.filter(id=category_id).exists():
+            errors.append('Choose a category.')
+        if errors:
+            for error in errors:
+                messages.error(request, error)
+            return render(request, 'dashboard/product_form.html', {
+                'categories': categories, 'action': 'Add',
+                'pending_count': Order.objects.filter(order_status='pending').count(),
+                'new_msg_count': get_new_msg_count(),
+            })
+
+        slug = slugify(name) or 'product'
         base_slug, counter = slug, 1
         while Product.objects.filter(slug=slug).exists():
             slug = f"{base_slug}-{counter}"; counter += 1
-        product = Product(name=name, slug=slug, category_id=request.POST.get('category'),
-                          description=request.POST.get('description'), price=request.POST.get('price'),
-                          offer_price=request.POST.get('offer_price') or None,
-                          stock_quantity=request.POST.get('stock_quantity', 0),
+        product = Product(name=name, slug=slug, category_id=category_id,
+                          description=request.POST.get('description') or '', price=price,
+                          offer_price=parse_decimal(request.POST.get('offer_price')),
+                          stock_quantity=parse_int(request.POST.get('stock_quantity')),
                           is_featured=request.POST.get('is_featured') == 'on',
                           is_active=request.POST.get('is_active') == 'on')
         if request.FILES.get('image'): product.image = request.FILES['image']
@@ -286,12 +326,19 @@ def product_edit(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     categories = Category.objects.all()
     if request.method == 'POST':
-        product.name = request.POST.get('name')
-        product.category_id = request.POST.get('category')
-        product.description = request.POST.get('description')
-        product.price = request.POST.get('price')
-        product.offer_price = request.POST.get('offer_price') or None
-        product.stock_quantity = request.POST.get('stock_quantity', 0)
+        name = (request.POST.get('name') or '').strip()
+        price = parse_decimal(request.POST.get('price'))
+        category_id = request.POST.get('category')
+        if not name or price is None or not Category.objects.filter(id=category_id).exists():
+            messages.error(request, 'Name, a valid price and a category are required.')
+            return redirect('dashboard_product_edit', product_id=product.id)
+
+        product.name = name
+        product.category_id = category_id
+        product.description = request.POST.get('description') or ''
+        product.price = price
+        product.offer_price = parse_decimal(request.POST.get('offer_price'))
+        product.stock_quantity = parse_int(request.POST.get('stock_quantity'))
         product.is_featured = request.POST.get('is_featured') == 'on'
         product.is_active = request.POST.get('is_active') == 'on'
         if request.FILES.get('image'): product.image = request.FILES['image']

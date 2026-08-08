@@ -5,7 +5,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from orders.models import Order
+from orders.views import may_view_order, remember_own_order
 from orders.email_utils import send_order_confirmation_email, send_admin_order_notification
 from products.models import Cart
 from .models import Payment
@@ -17,8 +20,16 @@ def get_razorpay_client():
     return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
+@login_required(login_url='/users/login/')
 def initiate_payment(request, order_id):
     order = get_object_or_404(Order, id=order_id)
+    # Was reachable by anyone, for any order id — it renders the customer's
+    # details and creates a real gateway order on every call.
+    if not may_view_order(request, order):
+        raise Http404
+    if order.payment_status == 'paid':
+        messages.info(request, 'This order has already been paid for.')
+        return redirect('order_confirmation', order_id=order.id)
     client = get_razorpay_client()
 
     amount_paise = int(order.total_price * 100)
@@ -90,16 +101,25 @@ def payment_success(request):
 
         try:
             payment = Payment.objects.get(razorpay_order_id=razorpay_order_id)
+            order = payment.order
+
+            # Idempotent: Razorpay can deliver this more than once, and the
+            # customer can refresh. Without this the confirmation emails were
+            # re-sent on every replay.
+            if payment.status == 'paid' and order.payment_status == 'paid':
+                remember_own_order(request, order)
+                return redirect('order_confirmation', order_id=order.id)
+
             payment.razorpay_payment_id = razorpay_payment_id
             payment.razorpay_signature = razorpay_signature
             payment.status = 'paid'
             payment.save()
 
-            order = payment.order
             order.payment_id = razorpay_payment_id
             order.payment_status = 'paid'
             order.order_status = 'confirmed'
             order.save()
+            remember_own_order(request, order)
 
             # Clear cart
             if request.session.session_key:
