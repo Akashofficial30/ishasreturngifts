@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}{{ action }} Product{% endblock %}
 {% block nav_products %}active{% endblock %}
 {% block page_title %}{{ action }} Product{% endblock %}
@@ -8,7 +9,7 @@
 <!-- Back + Header -->
 <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
   <a href="{% url 'dashboard_products' %}" class="btn btn-ghost btn-sm">
-    <i class="fas fa-arrow-left"></i> Back to Products
+    <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-left"></use></svg> Back to Products
   </a>
   <div style="height:20px;width:1px;background:var(--border);"></div>
   <span style="font-size:13px;color:var(--text3);">
@@ -25,7 +26,7 @@
     <!-- Basic Info Card -->
     <div class="card">
       <div class="card-head">
-        <span class="card-title"><i class="fas fa-info-circle"></i> Basic Information</span>
+        <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-info-circle"></use></svg> Basic Information</span>
       </div>
       <form method="POST" enctype="multipart/form-data" id="productForm">
         {% csrf_token %}
@@ -70,7 +71,7 @@
         <!-- Pricing Card -->
         <div style="border-top:1px solid var(--border);padding:20px;">
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-rupee-sign" style="color:var(--gold);"></i> Pricing
+            <svg class="icon" aria-hidden="true" style="color:var(--gold);"><use href="{% static 'icons/sprite.svg' %}#i-rupee-sign"></use></svg> Pricing
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
             <div class="f-group" style="margin:0;">
@@ -104,7 +105,7 @@
         <!-- Inventory Card -->
         <div style="border-top:1px solid var(--border);padding:20px;">
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-boxes" style="color:var(--blue);"></i> Inventory
+            <svg class="icon" aria-hidden="true" style="color:var(--blue);"><use href="{% static 'icons/sprite.svg' %}#i-boxes"></use></svg> Inventory
           </div>
           <div class="f-group" style="margin:0;max-width:200px;">
             <label class="f-label">Stock Quantity <span style="color:var(--rose2);">*</span></label>
@@ -120,7 +121,7 @@
         <!-- Image Card -->
         <div style="border-top:1px solid var(--border);padding:20px;">
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-image" style="color:var(--purple);"></i> Product Image
+            <svg class="icon" aria-hidden="true" style="color:var(--purple);"><use href="{% static 'icons/sprite.svg' %}#i-image"></use></svg> Product Image
           </div>
 
           {% if product.image %}
@@ -140,7 +141,7 @@
             ondragover="event.preventDefault();this.style.borderColor='#a855f7';this.style.background='rgba(168,85,247,0.05)';"
             ondragleave="this.style.borderColor='rgba(168,85,247,0.4)';this.style.background='var(--bg3)';"
             ondrop="handleImgDrop(event)">
-            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:#a855f7;margin-bottom:10px;display:block;"></i>
+            <svg class="icon" aria-hidden="true" style="font-size:2rem;color:#a855f7;margin-bottom:10px;display:block;"><use href="{% static 'icons/sprite.svg' %}#i-cloud-upload-alt"></use></svg>
             <div id="imgDropText" style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:4px;">
               Click to upload or drag & drop
             </div>
@@ -163,7 +164,7 @@
         <!-- Visibility Card -->
         <div style="border-top:1px solid var(--border);padding:20px;">
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-eye" style="color:var(--green);"></i> Visibility & Display
+            <svg class="icon" aria-hidden="true" style="color:var(--green);"><use href="{% static 'icons/sprite.svg' %}#i-eye"></use></svg> Visibility & Display
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;">
             <label style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg3);border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
@@ -198,16 +199,16 @@
         <!-- Action Buttons -->
         <div style="border-top:1px solid var(--border);padding:20px;display:flex;gap:12px;align-items:center;">
           <button type="submit" class="btn btn-gold" style="padding:12px 28px;font-size:14px;">
-            <i class="fas fa-save"></i>
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-save"></use></svg>
             {% if action == 'Edit' %}Update Product{% else %}Add Product{% endif %}
           </button>
           <a href="{% url 'dashboard_products' %}" class="btn btn-ghost">
-            <i class="fas fa-times"></i> Cancel
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times"></use></svg> Cancel
           </a>
           {% if action == 'Edit' %}
           <a href="{% url 'product_detail' product.slug %}" target="_blank"
             class="btn btn-ghost" style="margin-left:auto;">
-            <i class="fas fa-external-link-alt"></i> View on Site
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-external-link-alt"></use></svg> View on Site
           </a>
           {% endif %}
         </div>
@@ -223,7 +224,7 @@
     {% if action == 'Edit' and product.image %}
     <div class="card">
       <div class="card-head">
-        <span class="card-title"><i class="fas fa-eye"></i> Live Preview</span>
+        <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-eye"></use></svg> Live Preview</span>
       </div>
       <div class="card-body" style="text-align:center;">
         <img src="{{ product.image.url }}" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-bottom:12px;">
@@ -244,36 +245,36 @@
     <!-- Tips -->
     <div class="card">
       <div class="card-head">
-        <span class="card-title"><i class="fas fa-lightbulb"></i> Tips</span>
+        <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-lightbulb"></use></svg> Tips</span>
       </div>
       <div style="padding:0;">
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-image" style="color:var(--purple);width:14px;"></i> Image Quality
+            <svg class="icon" aria-hidden="true" style="color:var(--purple);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-image"></use></svg> Image Quality
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">Use square 800×800px images with white/light backgrounds for best display on product cards.</div>
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-tag" style="color:var(--gold);width:14px;"></i> Discount Badge
+            <svg class="icon" aria-hidden="true" style="color:var(--gold);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-tag"></use></svg> Discount Badge
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">Set Offer Price lower than Regular Price — a red discount % badge will automatically appear on the product card.</div>
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-star" style="color:var(--gold);width:14px;"></i> Featured
+            <svg class="icon" aria-hidden="true" style="color:var(--gold);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg> Featured
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">Featured products show on the homepage. Keep 4–8 featured products for a clean homepage layout.</div>
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-boxes" style="color:var(--blue);width:14px;"></i> Stock
+            <svg class="icon" aria-hidden="true" style="color:var(--blue);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-boxes"></use></svg> Stock
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">Products with 0 stock show "Out of Stock" and customers cannot add them to cart.</div>
         </div>
         <div style="padding:14px 18px;">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-align-left" style="color:var(--green);width:14px;"></i> Description
+            <svg class="icon" aria-hidden="true" style="color:var(--green);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-align-left"></use></svg> Description
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">Write at least 2–3 sentences. Mention materials, size, and what makes it a great gift.</div>
         </div>
@@ -284,7 +285,7 @@
     {% if action == 'Edit' %}
     <div class="card">
       <div class="card-head">
-        <span class="card-title"><i class="fas fa-chart-bar"></i> Product Stats</span>
+        <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chart-bar"></use></svg> Product Stats</span>
       </div>
       <div style="padding:0;">
         <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">

@@ -371,9 +371,12 @@ def product_delete(request, product_id):
 @login_required(login_url='/dashboard/login/')
 @user_passes_test(is_admin, login_url='/dashboard/login/')
 def category_list(request):
-    categories = Category.objects.annotate(product_count=Count('products'))
+    categories = list(Category.objects.annotate(product_count=Count('products')))
     return render(request, 'dashboard/categories.html', {
         'categories': categories,
+        # The template previously summed this with an empty {% for %}{% endfor
+        # %} loop, which does nothing, so "Total Products" always showed "—".
+        'total_products': sum(c.product_count for c in categories),
         'pending_count': Order.objects.filter(order_status='pending').count(),
         'new_msg_count': get_new_msg_count(),
     })

@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}Payments{% endblock %}
 {% block nav_payments %}active{% endblock %}
 {% block page_title %}Payments{% endblock %}
@@ -6,19 +7,19 @@
 {% block content %}
 <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px;">
   <div class="stat-card g">
-    <div class="stat-top"><div class="stat-icon si-g"><i class="fas fa-rupee-sign"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-g"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-rupee-sign"></use></svg></div></div>
     <div class="stat-val">₹{{ total_combined|floatformat:0 }}</div>
     <div class="stat-label">Total Collected</div>
     <div class="stat-sub">Online: ₹{{ total_collected|floatformat:0 }} · COD: ₹{{ cod_collected|floatformat:0 }}</div>
   </div>
   <div class="stat-card gr">
-    <div class="stat-top"><div class="stat-icon si-gr"><i class="fas fa-check-circle"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-gr"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg></div></div>
     <div class="stat-val">{{ payments|length }}</div>
     <div class="stat-label">Online Transactions</div>
     <div class="stat-sub">Via Razorpay</div>
   </div>
   <div class="stat-card r">
-    <div class="stat-top"><div class="stat-icon si-r"><i class="fas fa-truck"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-r"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-truck"></use></svg></div></div>
     <div class="stat-val">₹{{ cod_collected|floatformat:0 }}</div>
     <div class="stat-label">COD Collected</div>
     <div class="stat-sub">From delivered orders</div>
@@ -27,7 +28,7 @@
 
 <div class="card">
   <div class="card-head">
-    <div class="card-title"><i class="fas fa-credit-card"></i>Online Payment Transactions</div>
+    <div class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-credit-card"></use></svg>Online Payment Transactions</div>
     <div style="display:flex;gap:8px;">
       <form method="GET" style="display:flex;gap:8px;align-items:center;">
         <select name="status" class="f-control" style="width:auto;padding:7px 12px;">
@@ -37,7 +38,7 @@
           <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
           <option value="refunded" {% if status_filter == 'refunded' %}selected{% endif %}>Refunded</option>
         </select>
-        <button type="submit" class="btn btn-gold btn-sm"><i class="fas fa-filter"></i></button>
+        <button type="submit" class="btn btn-gold btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-filter"></use></svg></button>
       </form>
     </div>
   </div>
@@ -59,7 +60,7 @@
           <td style="color:var(--text3);font-size:12px;">{{ p.created_at|date:"d M Y, H:i" }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="7"><div class="empty"><i class="fas fa-credit-card"></i><p>No transactions yet.</p></div></td></tr>
+        <tr><td colspan="7"><div class="empty"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-credit-card"></use></svg><p>No transactions yet.</p></div></td></tr>
         {% endfor %}
       </tbody>
     </table>

@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}Orders{% endblock %}
 {% block nav_orders %}active{% endblock %}
 {% block page_title %}Orders{% endblock %}
@@ -10,7 +11,7 @@
     <p>{{ total_count }} order{{ total_count|pluralize }} found</p>
   </div>
   <div class="s-actions">
-    <a href="{% url 'export_orders_excel' %}" class="btn btn-excel"><i class="fas fa-file-excel"></i> Export Excel</a>
+    <a href="{% url 'export_orders_excel' %}" class="btn btn-excel"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-file-excel"></use></svg> Export Excel</a>
   </div>
 </div>
 
@@ -35,8 +36,8 @@
         <option value="cod" {% if method_filter == 'cod' %}selected{% endif %}>Cash on Delivery</option>
         <option value="online" {% if method_filter == 'online' %}selected{% endif %}>Online Payment</option>
       </select>
-      <button type="submit" class="btn btn-gold btn-sm"><i class="fas fa-filter"></i> Filter</button>
-      <a href="{% url 'dashboard_orders' %}" class="btn btn-ghost btn-sm"><i class="fas fa-times"></i></a>
+      <button type="submit" class="btn btn-gold btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-filter"></use></svg> Filter</button>
+      <a href="{% url 'dashboard_orders' %}" class="btn btn-ghost btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times"></use></svg></a>
     </form>
   </div>
   <div style="overflow-x:auto;">
@@ -60,10 +61,10 @@
           <td><span class="badge b-{{ o.order_status }}">{{ o.order_status|title }}</span></td>
           <td style="color:var(--text3);font-size:12px;">{{ o.city }}</td>
           <td style="color:var(--text3);font-size:11px;white-space:nowrap;">{{ o.created_at|date:"d M Y" }}<br>{{ o.created_at|time:"H:i" }}</td>
-          <td><a href="{% url 'dashboard_order_detail' o.id %}" class="btn-icon"><i class="fas fa-eye"></i></a></td>
+          <td><a href="{% url 'dashboard_order_detail' o.id %}" class="btn-icon"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-eye"></use></svg></a></td>
         </tr>
         {% empty %}
-        <tr><td colspan="10"><div class="empty"><i class="fas fa-shopping-bag"></i><p>No orders found</p></div></td></tr>
+        <tr><td colspan="10"><div class="empty"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg><p>No orders found</p></div></td></tr>
         {% endfor %}
       </tbody>
     </table>

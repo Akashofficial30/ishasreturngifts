@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}Categories{% endblock %}
 {% block nav_categories %}active{% endblock %}
 {% block page_title %}Categories{% endblock %}
@@ -13,7 +14,7 @@
   </div>
   <div class="s-actions">
     <a href="{% url 'dashboard_category_add' %}" class="btn btn-gold">
-      <i class="fas fa-plus"></i> Add Category
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg> Add Category
     </a>
   </div>
 </div>
@@ -21,12 +22,12 @@
 <!-- Stats Row -->
 <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px;">
   <div class="stat-card g">
-    <div class="stat-top"><div class="stat-icon si-g"><i class="fas fa-tags"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-g"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tags"></use></svg></div></div>
     <div class="stat-val">{{ categories|length }}</div>
     <div class="stat-label">Total Categories</div>
   </div>
   <div class="stat-card gr">
-    <div class="stat-top"><div class="stat-icon si-gr"><i class="fas fa-gift"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-gr"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg></div></div>
     <div class="stat-val">{% for c in categories %}{% if forloop.first %}{{ c.product_count }}{% endif %}{% endfor %}</div>
     <div class="stat-label">Products (Top Category)</div>
     <div class="stat-sub">
@@ -34,13 +35,8 @@
     </div>
   </div>
   <div class="stat-card b">
-    <div class="stat-top"><div class="stat-icon si-b"><i class="fas fa-chart-bar"></i></div></div>
-    <div class="stat-val">
-      {% with total=0 %}
-        {% for c in categories %}{% endfor %}
-        —
-      {% endwith %}
-    </div>
+    <div class="stat-top"><div class="stat-icon si-b"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chart-bar"></use></svg></div></div>
+    <div class="stat-val">{{ total_products }}</div>
     <div class="stat-label">Total Products</div>
     <div class="stat-sub">Across all categories</div>
   </div>
@@ -49,9 +45,9 @@
 <!-- Categories Table Card -->
 <div class="card">
   <div class="card-head">
-    <span class="card-title"><i class="fas fa-tags"></i> All Categories</span>
+    <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tags"></use></svg> All Categories</span>
     <a href="{% url 'dashboard_category_add' %}" class="btn btn-gold btn-sm">
-      <i class="fas fa-plus"></i> New Category
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg> New Category
     </a>
   </div>
 
@@ -77,7 +73,7 @@
               {% if cat.image %}
               <img src="{{ cat.image.url }}" class="p-thumb" alt="{{ cat.name }}">
               {% else %}
-              <div class="p-thumb-ph"><i class="fas fa-tag"></i></div>
+              <div class="p-thumb-ph"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tag"></use></svg></div>
               {% endif %}
               <div>
                 <div style="font-weight:700;font-size:14px;color:var(--text);">{{ cat.name }}</div>
@@ -109,13 +105,13 @@
           <td>
             <div style="display:flex;gap:6px;align-items:center;">
               <a href="{% url 'dashboard_category_edit' cat.id %}" class="btn-icon" title="Edit Category">
-                <i class="fas fa-edit"></i>
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-edit"></use></svg>
               </a>
               <a href="{% url 'product_list' %}?category={{ cat.slug }}" class="btn-icon" title="View Products" target="_blank">
-                <i class="fas fa-external-link-alt"></i>
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-external-link-alt"></use></svg>
               </a>
               <a href="{% url 'dashboard_category_delete' cat.id %}" class="btn-icon del" title="Delete Category">
-                <i class="fas fa-trash"></i>
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-trash"></use></svg>
               </a>
             </div>
           </td>
@@ -124,10 +120,10 @@
         <tr>
           <td colspan="7">
             <div class="empty">
-              <i class="fas fa-tags"></i>
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tags"></use></svg>
               <p>No categories yet.</p>
               <a href="{% url 'dashboard_category_add' %}" class="btn btn-gold" style="margin-top:12px;">
-                <i class="fas fa-plus"></i> Add First Category
+                <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg> Add First Category
               </a>
             </div>
           </td>
@@ -144,7 +140,7 @@
       Showing {{ categories|length }} categor{{ categories|length|pluralize:"y,ies" }}
     </span>
     <a href="{% url 'dashboard_category_add' %}" class="btn btn-gold btn-sm">
-      <i class="fas fa-plus"></i> Add New Category
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg> Add New Category
     </a>
   </div>
   {% endif %}
@@ -154,25 +150,25 @@
 <!-- Tips Card -->
 <div class="card" style="margin-top:20px;">
   <div class="card-head">
-    <span class="card-title"><i class="fas fa-lightbulb"></i> Category Tips</span>
+    <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-lightbulb"></use></svg> Category Tips</span>
   </div>
   <div class="card-body">
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
       <div style="background:var(--bg3);border-radius:10px;padding:16px;border:1px solid var(--border);">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">
-          <i class="fas fa-image" style="color:var(--gold);margin-right:6px;"></i> Add Category Images
+          <svg class="icon" aria-hidden="true" style="color:var(--gold);margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-image"></use></svg> Add Category Images
         </div>
         <div style="font-size:12.5px;color:var(--text3);line-height:1.6;">Upload a square image (300×300px) for each category to display on the homepage.</div>
       </div>
       <div style="background:var(--bg3);border-radius:10px;padding:16px;border:1px solid var(--border);">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">
-          <i class="fas fa-link" style="color:var(--gold);margin-right:6px;"></i> Slug Auto-Generated
+          <svg class="icon" aria-hidden="true" style="color:var(--gold);margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-link"></use></svg> Slug Auto-Generated
         </div>
         <div style="font-size:12.5px;color:var(--text3);line-height:1.6;">Slugs are created automatically from the category name and used in URLs.</div>
       </div>
       <div style="background:var(--bg3);border-radius:10px;padding:16px;border:1px solid var(--border);">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">
-          <i class="fas fa-exclamation-triangle" style="color:var(--orange);margin-right:6px;"></i> Before Deleting
+          <svg class="icon" aria-hidden="true" style="color:var(--orange);margin-right:6px;"><use href="{% static 'icons/sprite.svg' %}#i-exclamation-triangle"></use></svg> Before Deleting
         </div>
         <div style="font-size:12.5px;color:var(--text3);line-height:1.6;">Deleting a category will also remove all products inside it. Move products first.</div>
       </div>

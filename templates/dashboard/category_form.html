@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}{{ action }} Category{% endblock %}
 {% block nav_categories %}active{% endblock %}
 {% block page_title %}{{ action }} Category{% endblock %}
@@ -7,7 +8,7 @@
 
 <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
   <a href="{% url 'dashboard_categories' %}" class="btn btn-ghost btn-sm">
-    <i class="fas fa-arrow-left"></i> Back to Categories
+    <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-left"></use></svg> Back to Categories
   </a>
   <div style="height:20px;width:1px;background:var(--border);"></div>
   <span style="font-size:13px;color:var(--text3);">
@@ -21,7 +22,7 @@
   <!-- LEFT: FORM -->
   <div class="card">
     <div class="card-head">
-      <span class="card-title"><i class="fas fa-tag"></i> Category Details</span>
+      <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tag"></use></svg> Category Details</span>
     </div>
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
@@ -67,7 +68,7 @@
             ondragover="event.preventDefault();this.style.borderColor='var(--gold)';"
             ondragleave="this.style.borderColor='rgba(212,168,67,0.4)';"
             ondrop="catHandleDrop(event)">
-            <i class="fas fa-image" style="font-size:2rem;color:var(--gold);margin-bottom:10px;display:block;"></i>
+            <svg class="icon" aria-hidden="true" style="font-size:2rem;color:var(--gold);margin-bottom:10px;display:block;"><use href="{% static 'icons/sprite.svg' %}#i-image"></use></svg>
             <div id="catImgText" style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:4px;">
               Click to upload or drag & drop
             </div>
@@ -90,16 +91,16 @@
       <!-- Action Buttons -->
       <div style="border-top:1px solid var(--border);padding:20px;display:flex;gap:12px;align-items:center;">
         <button type="submit" class="btn btn-gold" style="padding:12px 28px;font-size:14px;">
-          <i class="fas fa-save"></i>
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-save"></use></svg>
           {% if action == 'Edit' %}Update Category{% else %}Add Category{% endif %}
         </button>
         <a href="{% url 'dashboard_categories' %}" class="btn btn-ghost">
-          <i class="fas fa-times"></i> Cancel
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times"></use></svg> Cancel
         </a>
         {% if action == 'Edit' %}
         <a href="{% url 'product_list' %}?category={{ category.slug }}" target="_blank"
           class="btn btn-ghost" style="margin-left:auto;">
-          <i class="fas fa-external-link-alt"></i> View Products
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-external-link-alt"></use></svg> View Products
         </a>
         {% endif %}
       </div>
@@ -113,14 +114,14 @@
     <!-- Category Preview -->
     <div class="card">
       <div class="card-head">
-        <span class="card-title"><i class="fas fa-eye"></i> Preview</span>
+        <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-eye"></use></svg> Preview</span>
       </div>
       <div class="card-body" style="text-align:center;">
         {% if category.image %}
         <img src="{{ category.image.url }}" style="width:80px;height:80px;object-fit:cover;border-radius:50%;margin:0 auto 12px;display:block;border:3px solid var(--gold-dim);">
         {% else %}
         <div style="width:80px;height:80px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:2rem;color:var(--text3);">
-          <i class="fas fa-tag"></i>
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tag"></use></svg>
         </div>
         {% endif %}
         <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;">{{ category.name }}</div>
@@ -135,24 +136,24 @@
     <!-- Tips -->
     <div class="card">
       <div class="card-head">
-        <span class="card-title"><i class="fas fa-lightbulb"></i> Tips</span>
+        <span class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-lightbulb"></use></svg> Tips</span>
       </div>
       <div style="padding:0;">
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-image" style="color:var(--gold);width:14px;"></i> Category Image
+            <svg class="icon" aria-hidden="true" style="color:var(--gold);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-image"></use></svg> Category Image
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">Upload a square 300×300px image. It's shown as a circle on the homepage categories section.</div>
         </div>
         <div style="padding:14px 18px;border-bottom:1px solid var(--border);">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-link" style="color:var(--blue);width:14px;"></i> URL Slug
+            <svg class="icon" aria-hidden="true" style="color:var(--blue);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-link"></use></svg> URL Slug
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">The slug is auto-created from the name. For "Wedding Return Gifts" it becomes <code style="background:var(--bg3);padding:1px 5px;border-radius:4px;">wedding-return-gifts</code>.</div>
         </div>
         <div style="padding:14px 18px;">
           <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
-            <i class="fas fa-trash" style="color:var(--rose2);width:14px;"></i> Before Deleting
+            <svg class="icon" aria-hidden="true" style="color:var(--rose2);width:14px;"><use href="{% static 'icons/sprite.svg' %}#i-trash"></use></svg> Before Deleting
           </div>
           <div style="font-size:12px;color:var(--text3);line-height:1.6;">Move all products to another category before deleting. Deleting a category removes all its products too.</div>
         </div>

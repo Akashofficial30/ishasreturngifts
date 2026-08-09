@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}Contact Messages{% endblock %}
 {% block page_title %}Contact Messages{% endblock %}
 
@@ -6,22 +7,22 @@
 <!-- Stats -->
 <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
   <div class="stat-card r">
-    <div class="stat-top"><div class="stat-icon si-r"><i class="fas fa-envelope"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-r"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg></div></div>
     <div class="stat-val">{{ contact_messages.count }}</div>
     <div class="stat-label">Total Messages</div>
   </div>
   <div class="stat-card o">
-    <div class="stat-top"><div class="stat-icon si-o"><i class="fas fa-bell"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-o"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-bell"></use></svg></div></div>
     <div class="stat-val">{{ new_count }}</div>
     <div class="stat-label">New / Unread</div>
   </div>
   <div class="stat-card b">
-    <div class="stat-top"><div class="stat-icon si-b"><i class="fas fa-check-circle"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-b"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-check-circle"></use></svg></div></div>
     <div class="stat-val">{% for m in contact_messages %}{% if m.status == 'replied' %}1{% endif %}{% endfor %}</div>
     <div class="stat-label">Replied</div>
   </div>
   <div class="stat-card gr">
-    <div class="stat-top"><div class="stat-icon si-gr"><i class="fas fa-times-circle"></i></div></div>
+    <div class="stat-top"><div class="stat-icon si-gr"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times-circle"></use></svg></div></div>
     <div class="stat-val">{% for m in contact_messages %}{% if m.status == 'closed' %}1{% endif %}{% endfor %}</div>
     <div class="stat-label">Closed</div>
   </div>
@@ -48,8 +49,8 @@
         <option value="custom">Customization</option>
         <option value="other">Other</option>
       </select>
-      <button type="submit" class="btn btn-gold btn-sm"><i class="fas fa-filter"></i> Filter</button>
-      <a href="{% url 'dashboard_contact_messages' %}" class="btn btn-ghost btn-sm"><i class="fas fa-times"></i></a>
+      <button type="submit" class="btn btn-gold btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-filter"></use></svg> Filter</button>
+      <a href="{% url 'dashboard_contact_messages' %}" class="btn btn-ghost btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times"></use></svg></a>
     </form>
   </div>
 
@@ -100,12 +101,12 @@
           <td style="font-size:12px;color:var(--text3);">{{ msg.created_at|date:"d M Y" }}<br>{{ msg.created_at|time:"H:i" }}</td>
           <td>
             <button class="btn btn-ghost btn-sm" onclick="openModal({{ msg.id }}, '{{ msg.name|escapejs }}', '{{ msg.email|escapejs }}', '{{ msg.phone|escapejs }}', '{{ msg.get_subject_display|escapejs }}', '{{ msg.message|escapejs }}', '{{ msg.status }}', '{{ msg.admin_notes|escapejs }}')">
-              <i class="fas fa-reply"></i> Update
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-reply"></use></svg> Update
             </button>
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="7"><div class="empty"><i class="fas fa-envelope-open"></i><p>No contact messages yet.</p></div></td></tr>
+        <tr><td colspan="7"><div class="empty"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope-open"></use></svg><p>No contact messages yet.</p></div></td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -141,7 +142,7 @@
         <textarea name="admin_notes" id="modalNotes" class="f-control" rows="3" placeholder="Internal notes..."></textarea>
       </div>
       <div style="display:flex;gap:10px;">
-        <button type="submit" class="btn btn-gold"><i class="fas fa-save"></i> Save</button>
+        <button type="submit" class="btn btn-gold"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-save"></use></svg> Save</button>
         <button type="button" onclick="closeModal()" class="btn btn-ghost">Cancel</button>
       </div>
     </form>

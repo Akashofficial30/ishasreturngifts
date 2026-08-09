@@ -1,17 +1,18 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}Order #{{ order.get_short_order_id }}{% endblock %}
 {% block nav_orders %}active{% endblock %}
 {% block page_title %}Order <span style="color:var(--gold)">#{{ order.get_short_order_id }}</span>{% endblock %}
 
 {% block content %}
 <div style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-  <a href="{% url 'dashboard_orders' %}" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+  <a href="{% url 'dashboard_orders' %}" class="btn btn-ghost btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-arrow-left"></use></svg> Back</a>
   <!-- Resend Mail Button -->
   <form method="POST" style="display:inline;">
     {% csrf_token %}
     <input type="hidden" name="action" value="resend_mail">
     <button type="submit" class="btn btn-green btn-sm" onclick="return confirm('Resend confirmation emails to customer and admin?')">
-      <i class="fas fa-envelope"></i> Resend Emails
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg> Resend Emails
     </button>
   </form>
 </div>
@@ -22,7 +23,7 @@
     <!-- Items -->
     <div class="card" style="margin-bottom:16px;">
       <div class="card-head">
-        <div class="card-title"><i class="fas fa-shopping-bag"></i>Items Ordered</div>
+        <div class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg>Items Ordered</div>
         <span style="color:var(--text3);font-size:12px;">{{ order.items.count }} item{{ order.items.count|pluralize }}</span>
       </div>
       <div style="overflow-x:auto;">
@@ -53,7 +54,7 @@
 
     <!-- Update Form -->
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="fas fa-edit"></i>Update Order</div></div>
+      <div class="card-head"><div class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-edit"></use></svg>Update Order</div></div>
       <div class="card-body">
         <form method="POST">
           {% csrf_token %}
@@ -80,7 +81,7 @@
             <label class="f-label">Internal Notes</label>
             <textarea name="notes" class="f-control" rows="3" placeholder="Add notes...">{{ order.notes }}</textarea>
           </div>
-          <button type="submit" class="btn btn-gold"><i class="fas fa-save"></i> Save Changes</button>
+          <button type="submit" class="btn btn-gold"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-save"></use></svg> Save Changes</button>
         </form>
       </div>
     </div>
@@ -90,10 +91,8 @@
   <div style="display:flex;flex-direction:column;gap:14px;">
     <!-- Order Summary -->
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="fas fa-info-circle"></i>Summary</div></div>
-      {% for pair in order.created_at|yesno:"t,f" %}{% endfor %}
+      <div class="card-head"><div class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-info-circle"></use></svg>Summary</div></div>
       <div style="padding:0;">
-        {% for label,value,color in order|yesno:"t,f" %}{% endfor %}
         <div style="padding:13px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
           <span style="color:var(--text3);font-size:12px;">Order ID</span>
           <span style="font-family:monospace;font-weight:700;color:var(--gold);">#{{ order.get_short_order_id }}</span>
@@ -123,16 +122,16 @@
 
     <!-- Customer -->
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="fas fa-user"></i>Customer</div></div>
+      <div class="card-head"><div class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-user"></use></svg>Customer</div></div>
       <div class="card-body">
         <div style="font-size:15px;font-weight:700;margin-bottom:12px;">{{ order.customer_name }}</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div style="display:flex;gap:10px;font-size:12.5px;color:var(--text2);">
-            <i class="fas fa-phone" style="color:var(--gold);width:14px;margin-top:2px;"></i> {{ order.customer_phone }}
+            <svg class="icon" aria-hidden="true" style="color:var(--gold);width:14px;margin-top:2px;"><use href="{% static 'icons/sprite.svg' %}#i-phone"></use></svg> {{ order.customer_phone }}
           </div>
           {% if order.customer_email %}
           <div style="display:flex;gap:10px;font-size:12.5px;color:var(--text2);">
-            <i class="fas fa-envelope" style="color:var(--gold);width:14px;margin-top:2px;"></i> {{ order.customer_email }}
+            <svg class="icon" aria-hidden="true" style="color:var(--gold);width:14px;margin-top:2px;"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg> {{ order.customer_email }}
           </div>
           {% endif %}
         </div>
@@ -141,7 +140,7 @@
 
     <!-- Shipping -->
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="fas fa-map-marker-alt"></i>Delivery Address</div></div>
+      <div class="card-head"><div class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-map-marker-alt"></use></svg>Delivery Address</div></div>
       <div class="card-body">
         <div style="font-size:13px;line-height:1.9;color:var(--text2);">
           {{ order.address }}<br>
@@ -153,7 +152,7 @@
 
     {% if order.payment_id %}
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="fas fa-credit-card"></i>Payment Info</div></div>
+      <div class="card-head"><div class="card-title"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-credit-card"></use></svg>Payment Info</div></div>
       <div class="card-body">
         <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Payment ID</div>
         <div style="font-family:monospace;font-size:11.5px;background:var(--bg3);padding:8px 10px;border-radius:6px;word-break:break-all;color:var(--text);">{{ order.payment_id }}</div>

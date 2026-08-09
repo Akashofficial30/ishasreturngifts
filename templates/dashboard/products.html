@@ -1,4 +1,5 @@
 {% extends 'dashboard/base.html' %}
+{% load static %}
 {% block title %}Products{% endblock %}
 {% block nav_products %}active{% endblock %}
 {% block page_title %}Products{% endblock %}
@@ -12,19 +13,19 @@
   <div class="s-actions">
     <!-- Download Template -->
     <a href="{% url 'download_import_template' %}" class="btn btn-ghost" title="Download sample Excel template">
-      <i class="fas fa-download"></i> Template
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-download"></use></svg> Template
     </a>
     <!-- Import Excel Button -->
     <button class="btn btn-excel" onclick="openImportModal()">
-      <i class="fas fa-file-excel"></i> Import Excel
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-file-excel"></use></svg> Import Excel
     </button>
     <!-- Export Excel Button -->
     <a href="{% url 'export_products_excel' %}" class="btn btn-excel">
-      <i class="fas fa-file-download"></i> Export Excel
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-file-download"></use></svg> Export Excel
     </a>
     <!-- Add Product -->
     <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold">
-      <i class="fas fa-plus"></i> Add Product
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg> Add Product
     </a>
   </div>
 </div>
@@ -46,8 +47,8 @@
         <option value="low" {% if stock_filter == 'low' %}selected{% endif %}>⚠ Low Stock (≤10)</option>
         <option value="out" {% if stock_filter == 'out' %}selected{% endif %}>✗ Out of Stock</option>
       </select>
-      <button type="submit" class="btn btn-gold btn-sm"><i class="fas fa-filter"></i> Filter</button>
-      <a href="{% url 'dashboard_products' %}" class="btn btn-ghost btn-sm"><i class="fas fa-times"></i></a>
+      <button type="submit" class="btn btn-gold btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-filter"></use></svg> Filter</button>
+      <a href="{% url 'dashboard_products' %}" class="btn btn-ghost btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-times"></use></svg></a>
     </form>
   </div>
 
@@ -74,7 +75,7 @@
               {% if product.image %}
               <img src="{{ product.image.url }}" class="p-thumb" alt="{{ product.name }}">
               {% else %}
-              <div class="p-thumb-ph"><i class="fas fa-gift"></i></div>
+              <div class="p-thumb-ph"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg></div>
               {% endif %}
               <div>
                 <div style="font-weight:600;font-size:13px;color:var(--text);">{{ product.name }}</div>
@@ -102,9 +103,9 @@
           </td>
           <td>
             {% if product.is_featured %}
-            <i class="fas fa-star" style="color:var(--gold);font-size:16px;"></i>
+            <svg class="icon" aria-hidden="true" style="color:var(--gold);font-size:16px;"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg>
             {% else %}
-            <i class="far fa-star" style="color:var(--text3);font-size:16px;"></i>
+            <svg class="icon" aria-hidden="true" style="color:var(--text3);font-size:16px;"><use href="{% static 'icons/sprite.svg' %}#i-star"></use></svg>
             {% endif %}
           </td>
           <td>
@@ -116,9 +117,9 @@
           </td>
           <td>
             <div style="display:flex;gap:5px;">
-              <a href="{% url 'dashboard_product_edit' product.id %}" class="btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
-              <a href="{% url 'product_detail' product.slug %}" class="btn-icon" title="View on site" target="_blank"><i class="fas fa-external-link-alt"></i></a>
-              <a href="{% url 'dashboard_product_delete' product.id %}" class="btn-icon del" title="Delete"><i class="fas fa-trash"></i></a>
+              <a href="{% url 'dashboard_product_edit' product.id %}" class="btn-icon" title="Edit"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-edit"></use></svg></a>
+              <a href="{% url 'product_detail' product.slug %}" class="btn-icon" title="View on site" target="_blank"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-external-link-alt"></use></svg></a>
+              <a href="{% url 'dashboard_product_delete' product.id %}" class="btn-icon del" title="Delete"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-trash"></use></svg></a>
             </div>
           </td>
         </tr>
@@ -126,11 +127,11 @@
         <tr>
           <td colspan="8">
             <div class="empty">
-              <i class="fas fa-gift"></i>
+              <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg>
               <p>No products found.</p>
               <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;">
-                <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Add Product</a>
-                <button onclick="openImportModal()" class="btn btn-excel btn-sm"><i class="fas fa-file-excel"></i> Import Excel</button>
+                <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg> Add Product</a>
+                <button onclick="openImportModal()" class="btn btn-excel btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-file-excel"></use></svg> Import Excel</button>
               </div>
             </div>
           </td>
@@ -145,8 +146,8 @@
   <div style="padding:12px 20px;border-top:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
     <span style="font-size:12.5px;color:var(--text3);">Showing {{ products.count }} product{{ products.count|pluralize }}</span>
     <div style="display:flex;gap:8px;">
-      <button onclick="openImportModal()" class="btn btn-excel btn-sm"><i class="fas fa-file-excel"></i> Import More</button>
-      <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Add Product</a>
+      <button onclick="openImportModal()" class="btn btn-excel btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-file-excel"></use></svg> Import More</button>
+      <a href="{% url 'dashboard_product_add' %}" class="btn btn-gold btn-sm"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-plus"></use></svg> Add Product</a>
     </div>
   </div>
   {% endif %}
@@ -163,7 +164,7 @@
     <div style="padding:22px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg3);">
       <div>
         <h3 style="font-size:17px;font-weight:700;color:var(--text);margin:0 0 3px;">
-          <i class="fas fa-file-excel" style="color:#4ade80;margin-right:8px;"></i>Import Products from Excel
+          <svg class="icon" aria-hidden="true" style="color:#4ade80;margin-right:8px;"><use href="{% static 'icons/sprite.svg' %}#i-file-excel"></use></svg>Import Products from Excel
         </h3>
         <p style="font-size:12.5px;color:var(--text3);margin:0;">Upload an Excel file to bulk-add products</p>
       </div>
@@ -199,7 +200,7 @@
           <div style="font-size:12px;color:var(--text3);margin-top:2px;">Fill in the template and upload it below</div>
         </div>
         <a href="{% url 'download_import_template' %}" class="btn btn-gold btn-sm" style="flex-shrink:0;">
-          <i class="fas fa-download"></i> Template
+          <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-download"></use></svg> Template
         </a>
       </div>
 
@@ -228,7 +229,7 @@
              ondragover="handleDragOver(event)"
              ondragleave="handleDragLeave(event)"
              ondrop="handleDrop(event)">
-          <i class="fas fa-cloud-upload-alt" style="font-size:2.5rem;color:#4ade80;margin-bottom:12px;display:block;"></i>
+          <svg class="icon" aria-hidden="true" style="font-size:2.5rem;color:#4ade80;margin-bottom:12px;display:block;"><use href="{% static 'icons/sprite.svg' %}#i-cloud-upload-alt"></use></svg>
           <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;" id="dropText">
             Click to choose file or drag & drop here
           </div>
@@ -238,7 +239,7 @@
 
         <!-- Selected File Info -->
         <div id="fileInfo" style="display:none;margin-top:12px;padding:12px 16px;background:var(--green-dim);border:1px solid rgba(34,197,94,0.3);border-radius:10px;display:flex;align-items:center;gap:12px;">
-          <i class="fas fa-file-excel" style="color:#4ade80;font-size:1.5rem;"></i>
+          <svg class="icon" aria-hidden="true" style="color:#4ade80;font-size:1.5rem;"><use href="{% static 'icons/sprite.svg' %}#i-file-excel"></use></svg>
           <div style="flex:1;">
             <div id="fileName" style="font-size:13.5px;font-weight:600;color:var(--text);"></div>
             <div id="fileSize" style="font-size:12px;color:var(--text3);"></div>
@@ -249,7 +250,7 @@
         <!-- Submit -->
         <div style="display:flex;gap:10px;margin-top:20px;">
           <button type="submit" id="importBtn" class="btn btn-gold" style="flex:1;" disabled>
-            <i class="fas fa-upload"></i> Import Products
+            <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-upload"></use></svg> Import Products
           </button>
           <button type="button" onclick="closeImportModal()" class="btn btn-ghost">
             Cancel
@@ -327,7 +328,7 @@ function handleDrop(e) {
 // Show loading on submit
 document.getElementById('importForm').addEventListener('submit', function() {
   const btn = document.getElementById('importBtn');
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+  btn.innerHTML = '<svg class="icon fa-spin" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-spinner"></use></svg> Importing...';
   btn.disabled = true;
 });
 </script>

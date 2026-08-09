@@ -5,9 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}Dashboard{% endblock %} — Isha's Return Gifts</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- No external stylesheets or fonts: admin-only, but there is no reason to
+     make an admin's browser wait on three CDN round trips either. -->
 <style>
 :root{
   --bg:#0c0c10;--bg2:#13131a;--bg3:#1a1a24;--bg4:#21212e;
@@ -24,7 +23,7 @@
   --sidebar:260px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13.5px;line-height:1.6;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13.5px;line-height:1.6;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:var(--bg2);}
 ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:10px;}
@@ -98,7 +97,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
 .card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .card-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
-.card-title i{color:var(--gold);}
+.card-title i,.card-title svg.icon{color:var(--gold);}
 .card-body{padding:20px;}
 
 /* TABLE */
@@ -139,7 +138,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .b-inactive{background:var(--rose-dim);color:var(--rose2);}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--radius-sm);font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:all 0.2s;white-space:nowrap;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--radius-sm);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:none;border:none;transition:all 0.2s;white-space:nowrap;}
 .btn-gold{background:linear-gradient(135deg,var(--gold),#b8892a);color:white;box-shadow:0 3px 12px rgba(212,168,67,0.3);}
 .btn-gold:hover{opacity:0.85;color:white;transform:translateY(-1px);}
 .btn-ghost{background:var(--bg3);border:1px solid var(--border);color:var(--text2);}
@@ -155,7 +154,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 /* FORMS */
 .f-group{margin-bottom:18px;}
 .f-label{display:block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:7px;}
-.f-control{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;outline:none;transition:all 0.2s;}
+.f-control{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:13px;outline:none;transition:all 0.2s;}
 .f-control:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-dim);}
 .f-control option{background:var(--bg3);}
 textarea.f-control{resize:vertical;min-height:90px;}
@@ -177,7 +176,11 @@ textarea.f-control{resize:vertical;min-height:90px;}
 .p-thumb{width:42px;height:42px;border-radius:var(--radius-xs);object-fit:cover;}
 .p-thumb-ph{width:42px;height:42px;border-radius:var(--radius-xs);background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:16px;}
 .empty{text-align:center;padding:60px 20px;}
-.empty i{font-size:2.5rem;color:var(--text3);margin-bottom:14px;display:block;}
+.empty i,.empty svg.icon{font-size:2.5rem;color:var(--text3);margin-bottom:14px;display:block;}
+/* svg.icon: replaces Font Awesome's <i> glyphs (removed with the CDN). */
+svg.icon{width:1em;height:1em;fill:currentColor;vertical-align:-.125em;flex-shrink:0;}
+svg.icon.fa-spin{animation:icon-spin 1s linear infinite;}
+@keyframes icon-spin{to{transform:rotate(360deg);}}
 .empty p{color:var(--text3);font-size:13px;}
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
 .overlay.show{display:block;}
@@ -213,44 +216,44 @@ textarea.f-control{resize:vertical;min-height:90px;}
   <div class="nav-wrap">
     <div class="nav-section-label">Overview</div>
     <a href="{% url 'dashboard_home' %}" class="nav-link {% block nav_home %}{% endblock %}">
-      <i class="fas fa-chart-pie ni"></i> Dashboard
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-chart-pie"></use></svg> Dashboard
     </a>
 
     <div class="nav-section-label" style="margin-top:8px;">Store</div>
     <a href="{% url 'dashboard_orders' %}" class="nav-link {% block nav_orders %}{% endblock %}">
-      <i class="fas fa-shopping-bag ni"></i> Orders
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-shopping-bag"></use></svg> Orders
       {% if pending_count %}<span class="nb">{{ pending_count }}</span>{% endif %}
     </a>
     <a href="{% url 'dashboard_products' %}" class="nav-link {% block nav_products %}{% endblock %}">
-      <i class="fas fa-gift ni"></i> Products
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-gift"></use></svg> Products
     </a>
     <a href="{% url 'dashboard_categories' %}" class="nav-link {% block nav_categories %}{% endblock %}">
-      <i class="fas fa-tags ni"></i> Categories
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-tags"></use></svg> Categories
     </a>
 
     <div class="nav-section-label" style="margin-top:8px;">Finance</div>
     <a href="{% url 'dashboard_payments' %}" class="nav-link {% block nav_payments %}{% endblock %}">
-      <i class="fas fa-credit-card ni"></i> Payments
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-credit-card"></use></svg> Payments
     </a>
     <a href="{% url 'dashboard_customers' %}" class="nav-link {% block nav_customers %}{% endblock %}">
-      <i class="fas fa-users ni"></i> Customers
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-users"></use></svg> Customers
     </a>
 
     <div class="nav-section-label" style="margin-top:8px;">Support</div>
     <a href="{% url 'dashboard_contact_messages' %}" class="nav-link {% block nav_messages %}{% endblock %}">
-      <i class="fas fa-envelope ni"></i> Messages
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg> Messages
       {% if new_msg_count %}<span class="nb-msg">{{ new_msg_count }}</span>{% endif %}
     </a>
 
     <div class="nav-section-label" style="margin-top:8px;">System</div>
     <a href="{% url 'home' %}" class="nav-link" target="_blank">
-      <i class="fas fa-globe ni"></i> View Website
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-globe"></use></svg> View Website
     </a>
     <a href="/admin/" class="nav-link" target="_blank">
-      <i class="fas fa-cog ni"></i> Django Admin
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-cog"></use></svg> Django Admin
     </a>
     <a href="{% url 'dashboard_logout' %}" class="nav-link" style="color:#f87171;">
-      <i class="fas fa-sign-out-alt ni"></i> Logout
+      <svg class="icon ni" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-sign-out-alt"></use></svg> Logout
     </a>
   </div>
 
@@ -261,7 +264,7 @@ textarea.f-control{resize:vertical;min-height:90px;}
         <div class="user-info-name">{{ request.user.get_full_name|default:request.user.username }}</div>
         <div class="user-info-role">Administrator</div>
       </div>
-      <a href="{% url 'dashboard_logout' %}" class="user-logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+      <a href="{% url 'dashboard_logout' %}" class="user-logout" title="Logout"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-sign-out-alt"></use></svg></a>
     </div>
   </div>
 </aside>
@@ -269,14 +272,14 @@ textarea.f-control{resize:vertical;min-height:90px;}
 <div class="main">
   <header class="topbar">
     <div style="display:flex;align-items:center;gap:16px;">
-      <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <button class="menu-btn" onclick="toggleSidebar()"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-bars"></use></svg></button>
       <h1 class="page-heading">{% block page_title %}Dashboard{% endblock %}</h1>
     </div>
     <div class="topbar-right">
       <div class="live-pill"><div class="live-dot"></div>Live</div>
-      <a href="{% url 'home' %}" class="tb-btn" title="View Website" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+      <a href="{% url 'home' %}" class="tb-btn" title="View Website" target="_blank"><svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-external-link-alt"></use></svg></a>
       <a href="{% url 'dashboard_contact_messages' %}" class="tb-btn" title="Messages" style="position:relative;">
-        <i class="fas fa-envelope"></i>
+        <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-envelope"></use></svg>
         {% if new_msg_count %}<span style="position:absolute;top:-4px;right:-4px;background:var(--orange);color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">{{ new_msg_count }}</span>{% endif %}
       </a>
     </div>
@@ -286,7 +289,7 @@ textarea.f-control{resize:vertical;min-height:90px;}
   <div class="alerts mt-2">
     {% for m in messages %}
     <div class="d-alert {% if m.tags == 'error' %}error{% elif m.tags == 'success' %}success{% else %}info{% endif %}">
-      <i class="fas {% if m.tags == 'error' %}fa-exclamation-circle{% elif m.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+      <svg class="icon" aria-hidden="true"><use href="{% static 'icons/sprite.svg' %}#i-{% if m.tags == 'error' %}exclamation-circle{% elif m.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></use></svg>
       {{ m }}
     </div>
     {% endfor %}
@@ -296,7 +299,9 @@ textarea.f-control{resize:vertical;min-height:90px;}
   <main class="page-body">{% block content %}{% endblock %}</main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Vendored rather than CDN-loaded: static/vendor/chart.umd.min.js is the
+     unmodified Chart.js 4.4.0 UMD build, same version the CDN served. -->
+<script src="{% static 'vendor/chart.umd.min.js' %}"></script>
 <script>
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
