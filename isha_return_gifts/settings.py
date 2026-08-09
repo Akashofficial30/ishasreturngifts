@@ -62,15 +62,28 @@ TEMPLATES = [
 WSGI_APPLICATION = 'isha_return_gifts.wsgi.application'
 
 # ── DATABASE ──────────────────────────────
-# SQLite locally; set DATABASE_URL to a Postgres URL in production.
+# SQLite locally; set DATABASE_URL to a Postgres URL (e.g. Supabase) in
+# production. Use the DIRECT connection string (port 5432), not the pgbouncer
+# transaction pooler — this app runs on a persistent process (gunicorn on a
+# normal host), not serverless, so Django's own connection reuse below is the
+# right tool and the pooler's transaction-mode caveats don't apply.
 DATABASE_URL = config('DATABASE_URL', default='')
 
 if DATABASE_URL:
     import dj_database_url
 
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600),
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            # Supabase requires TLS; this fails fast if a pasted URL omits it
+            # rather than silently connecting in plaintext.
+            ssl_require=True,
+        ),
     }
+    # Detects a connection Supabase has dropped for being idle (it recycles
+    # them periodically) and opens a fresh one instead of reusing a dead one.
+    DATABASES['default']['CONN_HEALTH_CHECKS'] = True
 else:
     DATABASES = {
         'default': {
@@ -96,17 +109,55 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+# Product/category/testimonial images. Filesystem storage locally; Supabase
+# Storage (S3-compatible) when the three vars below are set. Gated so a
+# developer without a Supabase project still gets a fully working site.
+SUPABASE_S3_ENDPOINT = config('SUPABASE_S3_ENDPOINT', default='')
+SUPABASE_S3_ACCESS_KEY = config('SUPABASE_S3_ACCESS_KEY', default='')
+SUPABASE_S3_SECRET_KEY = config('SUPABASE_S3_SECRET_KEY', default='')
+USE_SUPABASE_STORAGE = bool(
+    SUPABASE_S3_ENDPOINT and SUPABASE_S3_ACCESS_KEY and SUPABASE_S3_SECRET_KEY
+)
+
+# urls.py references MEDIA_URL/MEDIA_ROOT unconditionally (they're harmless
+# when unused: static() only serves files when DEBUG=True, and S3Storage
+# builds each file's actual URL from the bucket, not from MEDIA_URL).
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-STORAGES = {
-    'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
-    },
-    'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-    },
-}
+if USE_SUPABASE_STORAGE:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+            'OPTIONS': {
+                'bucket_name': config('SUPABASE_S3_BUCKET', default='media'),
+                'endpoint_url': SUPABASE_S3_ENDPOINT,
+                'access_key': SUPABASE_S3_ACCESS_KEY,
+                'secret_key': SUPABASE_S3_SECRET_KEY,
+                'region_name': config('SUPABASE_S3_REGION', default='ap-south-1'),
+                # Supabase's S3 gateway rejects the ACL parameter boto3 sends
+                # by default; bucket-level "public" access is set once in the
+                # Supabase dashboard instead.
+                'default_acl': None,
+                # No signed query-string auth: product photos are public, and
+                # signed URLs would break far-future cache headers.
+                'querystring_auth': False,
+                'file_overwrite': False,
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
+else:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

@@ -16,6 +16,10 @@ db.sqlite3-journal
 /media/
 /staticfiles/
 
+# Contains real customer names, phones and addresses when export_for_supabase.sh
+# has been run — must never be committed.
+supabase_data.json
+
 # Environment
 .env
 .env.local
