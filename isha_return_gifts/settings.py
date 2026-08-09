@@ -194,7 +194,6 @@ if DEBUG and config('DISABLE_SSL_VERIFY', default=False, cast=bool):
     ssl._create_default_https_context = ssl._create_unverified_context
 
 # ── EMAIL (Gmail SMTP) ────────────────────
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -208,6 +207,19 @@ EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 # match EMAIL_HOST_USER or mail will be rejected/rewritten.
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 ADMIN_EMAIL = config('ADMIN_EMAIL', default='')
+
+# No real mailbox configured yet: fall back to the console backend, which
+# "sends" mail by printing it to the server log instead of opening a real SMTP
+# connection. Without this, the placeholder value in .env.example (or a blank
+# EMAIL_HOST_USER) makes every send attempt a real, failing connection to
+# Gmail — an auth error today, and it was a CERTIFICATE_VERIFY_FAILED before
+# DISABLE_SSL_VERIFY existed. Swap in a real EMAIL_HOST_USER/PASSWORD later
+# and this switches to actually sending, with no other code change needed.
+_EMAIL_CONFIGURED = bool(EMAIL_HOST_USER and EMAIL_HOST_PASSWORD) and not EMAIL_HOST_USER.startswith('your_')
+EMAIL_BACKEND = (
+    'django.core.mail.backends.smtp.EmailBackend' if _EMAIL_CONFIGURED
+    else 'django.core.mail.backends.console.EmailBackend'
+)
 
 # ── LOGGING ───────────────────────────────
 # With DEBUG=False Django emails admins on 500s by default; log to stdout
