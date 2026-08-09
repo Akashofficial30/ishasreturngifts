@@ -150,6 +150,9 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+# Mail is still sent inside the request, so an unresponsive SMTP server would
+# otherwise hold the connection open until gunicorn's own timeout fires.
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 # Gmail rewrites the From header to the authenticated account, so this should
 # match EMAIL_HOST_USER or mail will be rejected/rewritten.
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
