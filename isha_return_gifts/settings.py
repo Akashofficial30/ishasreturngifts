@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from decouple import Csv, config
@@ -11,6 +12,15 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
+
+# Render assigns a *.onrender.com subdomain that isn't known until the first
+# deploy, so it can't be hardcoded into ALLOWED_HOSTS beforehand. Render sets
+# this env var on every web service automatically — pick it up as a safety net
+# on top of whatever ALLOWED_HOSTS/CSRF_TRUSTED_ORIGINS were already set to.
+_render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if _render_host:
+    ALLOWED_HOSTS.append(_render_host)
+    CSRF_TRUSTED_ORIGINS.append(f'https://{_render_host}')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
