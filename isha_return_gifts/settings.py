@@ -73,10 +73,16 @@ WSGI_APPLICATION = 'isha_return_gifts.wsgi.application'
 
 # ── DATABASE ──────────────────────────────
 # SQLite locally; set DATABASE_URL to a Postgres URL (e.g. Supabase) in
-# production. Use the DIRECT connection string (port 5432), not the pgbouncer
-# transaction pooler — this app runs on a persistent process (gunicorn on a
-# normal host), not serverless, so Django's own connection reuse below is the
-# right tool and the pooler's transaction-mode caveats don't apply.
+# production.
+#
+# Use Supabase's SESSION MODE pooler (port 5432 on the pooler host), not the
+# direct db.<ref>.supabase.co connection: that host is IPv6-only for new
+# Supabase projects, and most hosts (Render, Heroku, GitHub Actions) have no
+# outbound IPv6, so it fails at connect time with "Network is unreachable".
+# The pooler resolves to plain IPv4. Session mode behaves like a normal
+# persistent connection — no DISABLE_SERVER_SIDE_CURSORS or CONN_MAX_AGE=0
+# needed, unlike the 6543 transaction-mode port — which is the right fit for
+# an always-on gunicorn process rather than serverless.
 DATABASE_URL = config('DATABASE_URL', default='')
 
 if DATABASE_URL:
