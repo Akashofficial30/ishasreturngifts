@@ -67,6 +67,11 @@ def place_order(request):
         send_admin_order_notification(order)
         # return redirect('order_confirmation', order_id=order.id)
 
+    # store any online channel preference (card / upi / qr) in session so payment flow can use it
+    online_channel = request.POST.get('online_channel')
+    if online_channel:
+        request.session['online_channel'] = online_channel
+
     request.session['pending_order_id'] = order.id
     return redirect('initiate_payment', order_id=order.id)
 

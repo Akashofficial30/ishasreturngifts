@@ -2,6 +2,10 @@ import os
 import ssl
 from pathlib import Path
 
+# import os
+from dotenv import load_dotenv
+
+load_dotenv()
 # Fix Mac SSL certificate issue
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -96,8 +100,8 @@ LOGIN_REDIRECT_URL = '/'
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
 
 # ── RAZORPAY ──────────────────────────────
-RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_YourTestKeyId')
-RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'YourTestKeySecret')
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET')
 
 # ── EMAIL (Gmail SMTP) ────────────────────
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
