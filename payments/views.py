@@ -7,10 +7,25 @@ from orders.models import Order
 from orders.email_utils import send_order_confirmation_email, send_admin_order_notification
 from products.models import Cart
 from .models import Payment
+from django.http import HttpResponseNotFound
 
 
 def get_razorpay_client():
     return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+
+def initiate_latest(request):
+    """Debug helper: redirect to initiate_payment for the newest Order.
+    Only active when `settings.DEBUG` is True to avoid exposing in production.
+    """
+    if not getattr(settings, 'DEBUG', False):
+        return HttpResponseNotFound('Not found')
+
+    latest = Order.objects.order_by('-id').first()
+    if not latest:
+        return HttpResponseNotFound('No orders available')
+
+    return redirect('initiate_payment', order_id=latest.id)
 
 
 def initiate_payment(request, order_id):
@@ -19,14 +34,21 @@ def initiate_payment(request, order_id):
 
     amount_paise = int(order.total_price * 100)
 
+    # include preferred online channel (card/upi/qr) from session if present
+    preferred_channel = request.session.pop('online_channel', None)
+
+    notes = {
+        'customer_name': order.customer_name,
+        'customer_phone': order.customer_phone,
+    }
+    if preferred_channel:
+        notes['preferred_channel'] = preferred_channel
+
     razorpay_order = client.order.create({
         'amount': amount_paise,
         'currency': 'INR',
         'receipt': str(order.order_id),
-        'notes': {
-            'customer_name': order.customer_name,
-            'customer_phone': order.customer_phone,
-        }
+        'notes': notes
     })
 
     order.razorpay_order_id = razorpay_order['id']
@@ -47,6 +69,7 @@ def initiate_payment(request, order_id):
         'razorpay_key_id': settings.RAZORPAY_KEY_ID,
         'amount_paise': amount_paise,
         'amount': order.total_price,
+        'preferred_channel': preferred_channel,
     }
     return render(request, 'payments/payment.html', context)
 

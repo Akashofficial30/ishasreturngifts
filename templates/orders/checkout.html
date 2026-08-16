@@ -5,93 +5,151 @@
 
 {% block extra_css %}
 <style>
-.payment-option {
-    border: 2px solid #e0d4b8;
-    border-radius: 12px;
-    padding: 20px 24px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: white;
-    margin-bottom: 14px;
-    position: relative;
-    user-select: none;
-}
-.payment-option:hover {
-    border-color: var(--gold);
-    box-shadow: 0 4px 16px rgba(201,168,76,0.15);
-}
-.payment-option.selected {
-    border-color: var(--gold);
-    background: #fffdf5;
-    box-shadow: 0 4px 20px rgba(201,168,76,0.2);
-}
-.payment-option input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 0; height: 0;
-}
-.payment-option-inner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-.payment-radio-dot {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 2px solid #d0c4a8;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
-}
-.payment-option.selected .payment-radio-dot {
-    border-color: var(--gold);
-    background: var(--gold);
-}
-.payment-option.selected .payment-radio-dot::after {
-    content: '';
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: white;
-}
-.payment-icon-wrap {
-    width: 52px; height: 52px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-.payment-icon-wrap.cod { background: #f0faf0; }
-.payment-icon-wrap.online { background: #f0f4ff; }
-.payment-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 3px;
-}
-.payment-desc { font-size: 13px; color: var(--text-muted); }
-.payment-badges { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-.payment-badge {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.3px;
-}
-.badge-upi { background: #e8f5e9; color: #2e7d32; }
-.badge-card { background: #e3f2fd; color: #1565c0; }
-.badge-netbank { background: #f3e5f5; color: #6a1b9a; }
-.badge-wallet { background: #fff3e0; color: #e65100; }
-.badge-cod-tag { background: #fff8e1; color: #f57f17; }
-.online-details {
-    display: none;
-    margin-top: 16px;
-    padding: 16px;
-    background: #fafaf8;
-    border-radius: 8px;
-    border: 1px solid #e8dcc4;
-}
-.payment-option.selected .online-details { display: block; }
+    .payment-option {
+        border: 2px solid #e0d4b8;
+        border-radius: 12px;
+        padding: 20px 24px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+        margin-bottom: 14px;
+        position: relative;
+        user-select: none;
+    }
+
+    .payment-option:hover {
+        border-color: var(--gold);
+        box-shadow: 0 4px 16px rgba(201, 168, 76, 0.15);
+    }
+
+    .payment-option.selected {
+        border-color: var(--gold);
+        background: #fffdf5;
+        box-shadow: 0 4px 20px rgba(201, 168, 76, 0.2);
+    }
+
+    .payment-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .payment-option-inner {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .payment-radio-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid #d0c4a8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.2s;
+    }
+
+    .payment-option.selected .payment-radio-dot {
+        border-color: var(--gold);
+        background: var(--gold);
+    }
+
+    .payment-option.selected .payment-radio-dot::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
+    }
+
+    .payment-icon-wrap {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .payment-icon-wrap.cod {
+        background: #f0faf0;
+    }
+
+    .payment-icon-wrap.online {
+        background: #f0f4ff;
+    }
+
+    .payment-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 3px;
+    }
+
+    .payment-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .payment-badges {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+
+    .payment-badge {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 3px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.3px;
+    }
+
+    .badge-upi {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .badge-card {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+
+    .badge-netbank {
+        background: #f3e5f5;
+        color: #6a1b9a;
+    }
+
+    .badge-wallet {
+        background: #fff3e0;
+        color: #e65100;
+    }
+
+    .badge-cod-tag {
+        background: #fff8e1;
+        color: #f57f17;
+    }
+
+    .online-details {
+        display: none;
+        margin-top: 16px;
+        padding: 16px;
+        background: #fafaf8;
+        border-radius: 8px;
+        border: 1px solid #e8dcc4;
+    }
+
+    .payment-option.selected .online-details {
+        display: block;
+    }
 </style>
 {% endblock %}
 
@@ -119,7 +177,8 @@
                 <!-- Delivery Info -->
                 <div class="checkout-form-wrap mb-4">
                     <h4 class="checkout-section-title">
-                        <span style="background:var(--gold);color:white;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin-right:10px;">1</span>
+                        <span
+                            style="background:var(--gold);color:white;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin-right:10px;">1</span>
                         Delivery Information
                     </h4>
                     <form action="{% url 'place_order' %}" method="POST" id="checkoutForm">
@@ -127,41 +186,50 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Full Name *</label>
-                                <input type="text" name="name" class="form-control form-control-lg" required placeholder="Your full name">
+                                <input type="text" name="name" class="form-control form-control-lg" required
+                                    placeholder="Your full name">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number *</label>
-                                <input type="tel" name="phone" class="form-control form-control-lg" required placeholder="10-digit mobile" pattern="[0-9]{10}">
+                                <input type="tel" name="phone" class="form-control form-control-lg" required
+                                    placeholder="10-digit mobile" pattern="[0-9]{10}">
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Email (for order updates)</label>
-                                <input type="email" name="email" class="form-control form-control-lg" placeholder="your@email.com">
+                                <input type="email" name="email" class="form-control form-control-lg"
+                                    placeholder="your@email.com">
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Delivery Address *</label>
-                                <textarea name="address" class="form-control form-control-lg" rows="3" required placeholder="House no., Street, Area, Landmark"></textarea>
+                                <textarea name="address" class="form-control form-control-lg" rows="3" required
+                                    placeholder="House no., Street, Area, Landmark"></textarea>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">City *</label>
-                                <input type="text" name="city" class="form-control form-control-lg" required placeholder="City">
+                                <input type="text" name="city" class="form-control form-control-lg" required
+                                    placeholder="City">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">State *</label>
-                                <input type="text" name="state" class="form-control form-control-lg" value="Tamil Nadu" required>
+                                <input type="text" name="state" class="form-control form-control-lg" value="Tamil Nadu"
+                                    required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Pincode *</label>
-                                <input type="text" name="pincode" class="form-control form-control-lg" required placeholder="6-digit" pattern="[0-9]{6}">
+                                <input type="text" name="pincode" class="form-control form-control-lg" required
+                                    placeholder="6-digit" pattern="[0-9]{6}">
                             </div>
                         </div>
 
                         <!-- Payment Method Selection -->
                         <h4 class="checkout-section-title mt-5">
-                            <span style="background:var(--gold);color:white;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin-right:10px;">2</span>
+                            <span
+                                style="background:var(--gold);color:white;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin-right:10px;">2</span>
                             Choose Payment Method
                         </h4>
 
-                        <!-- COD Option -->
+                        <!-- COD Option (removed for this build) -->
+                        <!--
                         <label class="payment-option" id="cod-option" onclick="selectPayment('cod')">
                             <input type="radio" name="payment_method" value="cod" id="cod">
                             <div class="payment-option-inner">
@@ -180,6 +248,7 @@
                                 </div>
                             </div>
                         </label>
+                        -->
 
                         <!-- Online Payment Option -->
                         <label class="payment-option selected" id="online-option" onclick="selectPayment('online')">
@@ -202,28 +271,51 @@
                                     <span style="font-size:1.6rem;">🔒</span>
                                 </div>
                             </div>
-                            <!-- Online payment logos -->
+                            <!-- Online payment logos and channel selector -->
                             <div class="online-details">
-                                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                                    <span style="font-size:12px;color:var(--text-muted);margin-right:4px;">Accepted:</span>
+                                <div
+                                    style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                                    <span
+                                        style="font-size:12px;color:var(--text-muted);margin-right:4px;">Accepted:</span>
                                     <span style="font-size:1.4rem;" title="Visa">💳</span>
-                                    <span style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">PhonePe</span>
-                                    <span style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">GPay</span>
-                                    <span style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">Paytm</span>
-                                    <span style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">UPI</span>
-                                    <span style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">VISA</span>
-                                    <span style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">Mastercard</span>
+                                    <span
+                                        style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">PhonePe</span>
+                                    <span
+                                        style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">GPay</span>
+                                    <span
+                                        style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">Paytm</span>
+                                    <span
+                                        style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">UPI</span>
+                                    <span
+                                        style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">VISA</span>
+                                    <span
+                                        style="background:#f5f5f5;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:#333;">Mastercard</span>
                                 </div>
+
+                                <!-- Channel selector buttons -->
+                                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm online-channel active"
+                                        data-channel="card">Debit / Credit Card</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm online-channel"
+                                        data-channel="upi">UPI</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm online-channel"
+                                        data-channel="qr">QR Code</button>
+                                </div>
+
                                 <p style="font-size:12px;color:var(--text-muted);margin-top:10px;margin-bottom:0;">
                                     <i class="fas fa-shield-alt" style="color:var(--gold);"></i>
                                     Secured by Razorpay. Your payment info is 100% safe and encrypted.
                                 </p>
                             </div>
+
+                            <!-- hidden input to carry preferred online channel to server -->
+                            <input type="hidden" name="online_channel" id="online_channel" value="card">
                         </label>
 
                         <!-- Submit Button (changes based on selection) -->
-                        <button type="submit" class="btn-primary-gold btn-full mt-3" id="submitBtn" style="font-size:16px;padding:16px;">
-                            <span id="btnText"><i class="fas fa-lock me-2"></i> Proceed to Pay ₹{{ cart.get_total }}</span>
+                        <button type="submit" class="btn-primary-gold btn-full mt-3" id="submitBtn"
+                            style="font-size:16px;padding:16px;" data-total="{{ cart.get_total|floatformat:2 }}">
+                            <span id="btnText"><i class="fas fa-lock me-2"></i> Proceed to Pay ₹{{ cart.get_total|floatformat:2 }}</span>
                         </button>
 
                     </form>
@@ -247,7 +339,8 @@
                             </div>
                             <div class="order-item-details">
                                 <p class="order-item-name">{{ item.product.name }}</p>
-                                <p class="order-item-price">₹{{ item.product.effective_price }} × {{ item.quantity }}</p>
+                                <p class="order-item-price">₹{{ item.product.effective_price }} × {{ item.quantity }}
+                                </p>
                             </div>
                             <div class="order-item-total">₹{{ item.get_subtotal }}</div>
                         </div>
@@ -277,7 +370,8 @@
                     </div>
 
                     <!-- Payment method indicator -->
-                    <div id="paymentMethodBadge" style="margin-top:16px;padding:12px 16px;border-radius:8px;background:#f0f4ff;border:1px solid #c7d7f5;text-align:center;">
+                    <div id="paymentMethodBadge"
+                        style="margin-top:16px;padding:12px 16px;border-radius:8px;background:#f0f4ff;border:1px solid #c7d7f5;text-align:center;">
                         <i class="fas fa-lock" style="color:#1565c0;margin-right:6px;"></i>
                         <span style="font-size:13px;color:#1565c0;font-weight:500;">Online Payment via Razorpay</span>
                     </div>
@@ -295,35 +389,64 @@
 
 {% block extra_js %}
 <script>
-function selectPayment(method) {
-    const codOption = document.getElementById('cod-option');
-    const onlineOption = document.getElementById('online-option');
-    const btnText = document.getElementById('btnText');
-    const badge = document.getElementById('paymentMethodBadge');
-    const codFeeRow = document.getElementById('codFeeRow');
+    function selectPayment(method) {
+        const codOption = document.getElementById('cod-option');
+        const onlineOption = document.getElementById('online-option');
+        const btnText = document.getElementById('btnText');
+        const badge = document.getElementById('paymentMethodBadge');
+        const codFeeRow = document.getElementById('codFeeRow');
 
-    if (method === 'cod') {
-        document.getElementById('cod').checked = true;
-        codOption.classList.add('selected');
-        onlineOption.classList.remove('selected');
+        if (method === 'cod') {
+            const codInput = document.getElementById('cod');
+            if (codInput) codInput.checked = true;
+            if (codOption) codOption.classList.add('selected');
+            if (onlineOption) onlineOption.classList.remove('selected');
 
-        btnText.innerHTML = '<i class="fas fa-check-circle me-2"></i> Place Order (Cash on Delivery)';
-        badge.style.background = '#fff8e1';
-        badge.style.borderColor = '#ffe082';
-        badge.innerHTML = '<i class="fas fa-truck" style="color:#f57f17;margin-right:6px;"></i><span style="font-size:13px;color:#f57f17;font-weight:500;">Cash on Delivery – Pay when order arrives</span>';
-        codFeeRow.style.display = 'flex';
+            if (btnText) btnText.innerHTML = '<i class="fas fa-check-circle me-2"></i> Place Order (Cash on Delivery)';
+            if (badge) {
+                badge.style.background = '#fff8e1';
+                badge.style.borderColor = '#ffe082';
+                badge.innerHTML = '<i class="fas fa-truck" style="color:#f57f17;margin-right:6px;"></i><span style="font-size:13px;color:#f57f17;font-weight:500;">Cash on Delivery – Pay when order arrives</span>';
+            }
+            if (codFeeRow) codFeeRow.style.display = 'flex';
 
-    } else {
-        document.getElementById('online').checked = true;
-        onlineOption.classList.add('selected');
-        codOption.classList.remove('selected');
+        } else {
+            const onlineInput = document.getElementById('online');
+            if (onlineInput) onlineInput.checked = true;
+            if (onlineOption) onlineOption.classList.add('selected');
+            if (codOption) codOption.classList.remove('selected');
 
-        btnText.innerHTML = '<i class="fas fa-lock me-2"></i> Proceed to Pay ₹{{ cart.get_total }}';
-        badge.style.background = '#f0f4ff';
-        badge.style.borderColor = '#c7d7f5';
-        badge.innerHTML = '<i class="fas fa-lock" style="color:#1565c0;margin-right:6px;"></i><span style="font-size:13px;color:#1565c0;font-weight:500;">Online Payment via Razorpay</span>';
-        codFeeRow.style.display = 'none';
+            if (btnText) btnText.innerHTML = '<i class="fas fa-lock me-2"></i> Proceed to Pay ₹{{ cart.get_total }}';
+            if (badge) {
+                badge.style.background = '#f0f4ff';
+                badge.style.borderColor = '#c7d7f5';
+                badge.innerHTML = '<i class="fas fa-lock" style="color:#1565c0;margin-right:6px;"></i><span style="font-size:13px;color:#1565c0;font-weight:500;">Online Payment via Razorpay</span>';
+            }
+            if (codFeeRow) codFeeRow.style.display = 'none';
+        }
     }
-}
+</script>
+<script>
+    // handle choosing online channel (card / upi / qr)
+    document.querySelectorAll('.online-channel').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.online-channel').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const channel = this.getAttribute('data-channel');
+            const hidden = document.getElementById('online_channel');
+            if (hidden) hidden.value = channel;
+        });
+    });
+
+    // ensure when user selects online payment we default to card channel
+    const onlineOptionElem = document.getElementById('online-option');
+    if (onlineOptionElem) {
+        onlineOptionElem.addEventListener('click', function () {
+            document.getElementById('online_channel').value = 'card';
+            document.querySelectorAll('.online-channel').forEach(b => b.classList.remove('active'));
+            const first = document.querySelector('.online-channel[data-channel="card"]');
+            if (first) first.classList.add('active');
+        });
+    }
 </script>
 {% endblock %}

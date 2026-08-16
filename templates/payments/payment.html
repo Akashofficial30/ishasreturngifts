@@ -27,6 +27,9 @@
                         <p><strong>Order:</strong> #{{ order.get_short_order_id }}</p>
                         <p><strong>Customer:</strong> {{ order.customer_name }}</p>
                         <p><strong>Phone:</strong> {{ order.customer_phone }}</p>
+                        {% if preferred_channel %}
+                        <p><strong>Preferred Payment:</strong> {{ preferred_channel|upper }}</p>
+                        {% endif %}
                     </div>
                     <button id="rzp-button" class="btn-primary-gold btn-full btn-lg mt-4">
                         <i class="fas fa-lock me-2"></i> Pay ₹{{ amount }} Securely
