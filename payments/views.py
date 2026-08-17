@@ -1,4 +1,5 @@
 import logging
+import json
 
 import razorpay
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,9 +7,9 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from orders.models import Order
-from orders.views import may_view_order, remember_own_order
+from orders.views import may_view_order, remember_own_order, _create_order, REQUIRED_FIELDS, OutOfStock
 from orders.email_utils import send_order_confirmation_email, send_admin_order_notification
 from products.models import Cart
 from .models import Payment
@@ -143,3 +144,89 @@ def payment_success(request):
 @csrf_exempt
 def payment_failed(request):
     return render(request, 'payments/payment_failed.html')
+
+
+@login_required(login_url='/users/login/')
+def checkout_initiate(request):
+    """
+    AJAX endpoint called from the checkout page.
+    Validates the form, creates the DB order + Razorpay order,
+    and returns JSON so the frontend can open the Razorpay modal inline.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    if not request.session.session_key:
+        return JsonResponse({'error': 'Session expired. Please refresh and try again.'}, status=400)
+
+    cart = Cart.objects.filter(session_key=request.session.session_key).first()
+    if not cart or cart.get_item_count() == 0:
+        return JsonResponse({'error': 'Your cart is empty.'}, status=400)
+
+    # Validate required fields
+    values = {field: (request.POST.get(field) or '').strip() for field in REQUIRED_FIELDS}
+    missing = [label for field, label in REQUIRED_FIELDS.items() if not values[field]]
+    if missing:
+        return JsonResponse({'error': f"Please fill in: {', '.join(missing)}."}, status=400)
+
+    payment_method = request.POST.get('payment_method', 'online')
+    if payment_method not in dict(Order.PAYMENT_METHOD_CHOICES):
+        payment_method = 'online'
+
+    # Create the DB order
+    try:
+        order = _create_order(request, cart, values, payment_method)
+    except OutOfStock as exc:
+        return JsonResponse({
+            'error': f"Sorry, insufficient stock for: {', '.join(exc.names)}. Please adjust your cart."
+        }, status=400)
+
+    remember_own_order(request, order)
+
+    # Create Razorpay order
+    client = get_razorpay_client()
+    amount_paise = int(order.total_price * 100)
+
+    try:
+        razorpay_order = client.order.create({
+            'amount': amount_paise,
+            'currency': 'INR',
+            'receipt': str(order.order_id),
+            'notes': {
+                'customer_name': order.customer_name,
+                'customer_phone': order.customer_phone,
+            }
+        })
+    except Exception:
+        logger.exception('Razorpay order creation failed for order %s', order.id)
+        order.notes = f'{order.notes}\nPayment gateway unreachable at checkout.'.strip()
+        order.save(update_fields=['notes'])
+        return JsonResponse({
+            'error': 'Could not reach the payment gateway. Your order is saved — contact us with order ID to complete payment.',
+            'order_id': order.id,
+        }, status=502)
+
+    order.razorpay_order_id = razorpay_order['id']
+    order.save(update_fields=['razorpay_order_id'])
+
+    Payment.objects.update_or_create(
+        order=order,
+        defaults={
+            'razorpay_order_id': razorpay_order['id'],
+            'amount': order.total_price,
+            'status': 'created',
+        }
+    )
+
+    return JsonResponse({
+        'razorpay_order_id': razorpay_order['id'],
+        'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+        'amount_paise': amount_paise,
+        'amount': str(order.total_price),
+        'order_db_id': order.id,
+        'customer_name': order.customer_name,
+        'customer_phone': order.customer_phone,
+        'customer_email': order.customer_email,
+        'short_order_id': order.get_short_order_id(),
+    })
+

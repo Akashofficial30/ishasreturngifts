@@ -15,3 +15,4 @@ GRANT ALL PRIVILEGES ON DATABASE isha_return_gifts TO isha_user;
 
 -- Grant schema privileges (PostgreSQL 15+)
 GRANT ALL ON SCHEMA public TO isha_user;
+
